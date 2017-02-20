@@ -1,0 +1,235 @@
+#!/usr/bin/env python
+"""
+hashdd.py
+@brad_anton
+
+Command line interface to pyhashdd and the hashdd.com API. 
+
+License:
+ 
+Copyright 2015 hashdd.com
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
+from hashdd import hashdd
+from hashdd.constants import Algorithms, Features 
+from hashdd.api import client 
+
+import argparse
+import os 
+from os.path import join
+from pybloomfilter import BloomFilter
+from termcolor import colored
+from json import dumps
+
+def print_entry(result):
+    try:
+        print dumps(result)
+    except:
+        print result
+
+def recurse(starting, store_plaintext=False, algorithms=None, features=None, exclude=[], include=[], show=False):
+    """Recusively walks a directory starting at 'starting' and creates hashdd
+    objects from each file encountered. 
+
+    Keyword Arguments:
+    starting -- Directory to start recursing.
+    store_plaintext -- Boolean value defining whether or not we should store the plaintext
+        of the discovered file. 
+    algorithms -- a list of hashdd.constants.Algorithms to include in the result
+    features -- a list of hashdd.constants.Features to include in the result
+    """
+    results = []
+    for root, dirs, files in os.walk(starting):
+        for f in files:
+            extension = f.split('.')[-1]
+            if extension in exclude:
+                continue
+            if include and extension not in include:
+                continue
+            h = hashdd(filename=join(root, f), store_plaintext=store_plaintext, 
+                    algorithms=algorithms, features=features)
+            results.append(h.result)
+
+            if show:
+                print_entry(h.result)
+
+    return results
+
+def bloom(elements=None, filename='hashdd.bloom'):
+    """Creates and/or returns a bloom filter. If the filter
+    does not exist, it will be created using the items in elements. 
+    If it does exist, it will be returned. 
+
+    Keyword Arguments:
+    elements -- A list of strings to add to the bloom filter
+    filename -- The filename where the bloom filter should be stored
+    """
+    if os.path.isfile(filename):
+        bf = BloomFilter.open(filename)
+    else:
+        print '[+] Creating Bloom filter with {} elements'.format(len(elements)) 
+        if not elements:
+            raise Exception('Attempting to build a bloom filter, but have no items to add')
+
+        limit = len(elements)
+        bf = BloomFilter(limit, 0.0001, '{}'.format(filename))
+        for element in elements:
+            bf.add(unicode(element))
+
+    return bf
+
+def create_bloom(results, algorithms):
+    elements = []
+    for result in results:
+        for algo in algorithms:
+            elements.append(result[algo])
+            
+    bf = bloom(elements)
+
+def check_bloom(results, algorithms):
+    bf = bloom()
+    for result in results:
+        for algo in algorithms:
+            if unicode(result[algo]) in bf:
+                if 'match_count' not in result:
+                    result['match_count'] = 0
+                result['match_count'] += 1
+
+                if 'matches' not in result:
+                    result['matches'] = []
+                result['matches'].append(algo)
+    return results
+
+def print_results(results):
+    for result in results:
+        if 'match_count' in result:
+            print colored(result['hashdd_file_absolute_path'], 'green')
+        else:
+            print colored(result['hashdd_file_absolute_path'], 'red')
+
+def print_results_unmatched(results):
+    for result in results:
+        if 'match_count' not in result:
+            print colored(result['hashdd_file_absolute_path'], 'red')
+
+def build_hash_list(results, algorithm):
+    return [ result[algorithm] for result in results ]
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+            description="""\
+pyhashdd the client library for the hashdd.com API and is a 
+framework for obtaining features and hashing files. The resulting 
+hashes and features are meant to be used in a hash/feature database. 
+'action' commands (-c, -b, -u and -s) perform operations on the 
+selected file or directory defined with -f or -r. The remaining 
+arguments (-a, -n, and -p) define parameters for the action commands, 
+such as defining a specific hash or display options.""", 
+            epilog="""\
+Examples: 
+
+Calculate the sha256 of file test.txt and print it to the screen:
+    hashdd -s -f test.txt
+    
+Create a bloom filter from directory 'known_good':
+    hashdd -b -r known_good/
+
+With the bloom filter created, you can compare all files in 
+'investigation' to it:
+    hashdd -b -r investigation/
+
+By default, hashdd will show hashes that are in the filter 
+and hashes that are not, to just see those that are not:
+    hashdd -b -r investigation/ -n
+    """)
+
+    action = parser.add_mutually_exclusive_group(required=True)
+    action.add_argument('-l', '--lookup', action='store_true',
+            help='Look up the hashes in hashdd.com for known files.')
+    action.add_argument('-u', '--upload', action='store_true',
+            help='Upload the files to hashdd (Requires API Key in config.json)')
+    action.add_argument('-b', '--bloom', action='store_true', 
+            help='Create a Bloom filter with algorithm results or, if it exists, compare the output to the bloom.')
+    action.add_argument('-s', '--show', action='store_true',
+            help='Compute features/algorithms and print to screen.')
+
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-f', '--file', dest='filename', type=str, nargs='?', 
+            help='Single file to process')
+    group.add_argument('-r', '--recurse', dest='directory', type=str, nargs='?', 
+            help='Directory to recursively process')
+
+    parser.add_argument('-a', '--algorithms', nargs='*', default=[ 'sha256' ], 
+            help='A list of algorithms to include. (Default: sha256)')
+    parser.add_argument('-n', '--nomatch', action='store_true', 
+            help='When comparing, only print files not included within the Bloom filter')
+    parser.add_argument('-p', '--plaintext', action='store_true', 
+            help='Stored plaintext of files profiled (Default: false)')
+    parser.add_argument('-e', '--exclude', nargs='*', default=[], 
+            help='A space-separated list of file extensions to exclude. (Default: None)')
+    parser.add_argument('-i', '--include', nargs='*', default=[], 
+            help='A space-separated list of file extensions to include. (Default: All)')
+    parser.add_argument('--all', action='store_true',  
+            help='Compute all features and hashes (Default: No)')
+
+    args = parser.parse_args()
+
+    algorithms = None 
+    if args.algorithms:
+        algorithms = []
+        for a in args.algorithms:
+            if a.lower() == 'all':
+                algorithms = None
+                break
+            candidate = 'hashdd_{}'.format(a.lower())
+            if Algorithms(candidate):
+                algorithms.append('hashdd_{}'.format(a.lower()))
+
+    features = [ Features.FILE_ABSOLUTE_PATH.value ]
+
+    if args.plaintext:
+        features.append( Features.PLAINTEXT.value )
+
+    if args.all:
+        algorithms = None 
+        features = None
+
+
+    if args.filename:
+        h = hashdd(filename=args.filename, store_plaintext=args.plaintext, 
+                algorithms=algorithms, features=features)
+        results = [ h.result ]
+        if args.show:
+            print_entry(h.result)
+
+    elif args.directory:
+        results = recurse(args.directory, store_plaintext=args.plaintext,
+                algorithms=algorithms, features=features, exclude=args.exclude,
+                include=args.include, show=args.show)
+
+    bloomfilter_filename = 'hashdd.bloom'
+    if args.bloom:
+        if not os.path.isfile(bloomfilter_filename):
+            create_bloom(results, algorithms)
+        else:
+            results = check_bloom(results, algorithms)
+            if args.nomatch:
+                print_results_unmatched(results)
+            else:
+                print_results(results)
+    
+    if args.lookup:
+        c = client(None)
+        h = build_hash_list(results, algorithms[0])
+        print c.status(h)

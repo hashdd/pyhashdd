@@ -1,0 +1,15 @@
+cffi==1.8.3
+enum34==1.1.6
+future==0.16.0
+fuzzyhashlib==0.0.6
+pefile==2016.3.28
+py-mhash==1.2
+pybloomfiltermmap==0.3.15
+pycparser==2.14
+PyCRC==1.21
+pycrypto==2.6.1
+python-magic==0.4.12
+requests==2.13.0
+six==1.10.0
+ssdeep==3.1.1
+termcolor==1.1.0
