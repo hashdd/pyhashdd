@@ -27,17 +27,19 @@ import os
 MAX_SIZE = 4096 * 1024 * 1024
 
 class hashdd:
-    def __init__(self,  filename=None, buffer=None, store_plaintext=False, absolute_path=None,
-            features=None, algorithms=None, opsystem_code=None, product_code=None):
+    def __init__(self,  filename=None, buffer=None, store_plaintext=False, 
+            features=None, feature_overrides=None, algorithms=None):
         """Primary class for all hashing and profiling modules.
 
         Keyword Arguments:
-        filename --
-        buffer --
-        store_plaintext --
-        features --
-        feature_overrides --
-        algorithms --
+        filename -- Filename to evaluate. If buffer is not defined, this will open the file,
+            otherwise it will use this value when building the profile
+        buffer -- Contents to evaluate. 
+        store_plaintext -- Whether or not the plaintext should be included in the resulting output,
+            this is useful for storing the content in a database. 
+        features -- List of features to use, None for all. 
+        feature_overrides -- Dictionary containing features and values to override the output of the module
+        algorithms -- List of algorithms to use, None for all. 
         """
         self.buffer = buffer
 
@@ -52,15 +54,12 @@ class hashdd:
                 self.store_plaintext = False
 
         p = profile(filename=filename, buffer=self.buffer, store_plaintext=store_plaintext,
-                opsystem_code=opsystem_code, product_code=product_code, absolute_path=absolute_path,
-                modules=features)
+                modules=features, overrides=feature_overrides)
                 
-
         self.result = p.profile.copy()
 
         h = hashes(buffer=self.buffer, modules=algorithms)
         self.result.update(h.__dict__)
 
 if __name__ == '__main__':
-    h = hashdd(filename='../simpleStackandHeap.exe', directory='/home/e/pyhashdd')
-    print h.result
+    raise Exception('Cannot run this module directly.')

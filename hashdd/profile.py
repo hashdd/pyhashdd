@@ -24,7 +24,7 @@ from os.path import join
 
 class profile(object):
     def __init__(self, buffer=None, filename=None, overrides=None, modules=None, 
-            opsystem_code=None, product_code=None, store_plaintext=False, absolute_path=None):
+            store_plaintext=False):
         """
         Keyword Arguments:
         buffer -- String to apply features to
@@ -38,11 +38,6 @@ class profile(object):
         """
 
         self.profile = {} 
-        if modules is not None and 'hashdd_opsystem_code' in modules:
-            self.profile['hashdd_opsystem_code'] = opsystem_code
-
-        if modules is not None and 'hashdd_product_code' in modules:
-            self.profile['hashdd_product_code'] = product_code
 
         if filename is None and buffer is None:
             raise Exception('No file or buffer supplied, nothing to profile!')
@@ -54,11 +49,6 @@ class profile(object):
         for f in feature.__subclasses__():
             if ( f.__name__ == 'hashdd_plaintext'
                     and not store_plaintext ):
-                continue
-
-            if ( f.__name__ == 'hashdd_file_absolute_path'
-                    and absolute_path):
-                self.profile['hashdd_file_absolute_path'] = [ absolute_path ]
                 continue
 
             if modules is not None and f.__name__ not in modules:
@@ -73,9 +63,4 @@ class profile(object):
             self.profile[f.__name__] = f(buffer=buffer, filename=filename).result 
 
 if __name__ == '__main__':
-    filename = '../simpleStackandHeap.exe'
-    
-    with open(filename, 'rb') as f:
-        p = profile(buffer=f.read(), filename=filename)
-        print p.profile
-
+    raise Exception('Cannot run this module directory')

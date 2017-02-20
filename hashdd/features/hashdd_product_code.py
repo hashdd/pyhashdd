@@ -1,6 +1,11 @@
 """
-hashdd_file_name.py
+hashdd_product_code.py
 @brad_anton
+
+This is really just a placeholder module. It's purpose is to define
+a NSRL RDS-friendly product code, and should be used by
+providing a 'hashdd_product_code' override called through profile()
+
 
 License:
  
@@ -18,11 +23,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
 from feature import feature
-import os
 
-class hashdd_file_name(feature):
+class hashdd_product_code(feature):
     def process(self):
-        return [ os.path.basename(self.filename) ]
+        return [ None ]
 
