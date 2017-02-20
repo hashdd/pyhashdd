@@ -58,6 +58,18 @@ To calculate a specific hash type:
 hashdd -s -f sample.exe -a md5w
 ```
 
+# Library Examples
+
+To hash a file using all algorithms and features, then store the results in Mongo:
+
+```
+>>> from hashdd import hashdd
+>>> h = hashdd(filename='sample.exe')
+>>> from pymongo import MongoClient
+>>> db = MongoClient().hashdd
+>>> db.hashes.insert_one(h.result)
+```
+
 # API Client Examples
 
 To query the hashdd.com API for a basic status:
