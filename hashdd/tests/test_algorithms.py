@@ -119,6 +119,9 @@ class TestAlgorithms(unittest.TestCase):
     def test_crc32b(self):
         self.assertEqual(self.h.result['hashdd_crc32b'], 'BC5E1E30')
 
+    def test_content_hash(self):
+        self.assertEqual(self.h.result['hashdd_content_hash'], '1A2E7229BA84BC8A23794B75A7457B5FA449D4D2998B32B52FD30417E7929164')
+
     def test_uuid4(self):
         self.assertTrue(UUID(self.h.result['hashdd_uuid4']))
 

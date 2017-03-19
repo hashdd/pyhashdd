@@ -50,6 +50,7 @@ class Algorithms(Enum):
     GHASH32_5 = 'hashdd_ghash32_5'
     GOST = 'hashdd_gost'
     TIGER = 'hashdd_tiger'
+    CONTENT_HASH = 'hashdd_content_hash'
 
 class Features(Enum):
     UUID = 'hashdd_uuid4'

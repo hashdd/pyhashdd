@@ -1,6 +1,6 @@
 # hashdd
 
-pyhashdd is a library for building hash databases and interacting with the [hashdd.com](https://www.hashdd.com) API. For detailed information about the API, see the [API documentation](https://github.com/hashdd/api_documentation). 
+pyhashdd is a library for building and using hash databases. It also serves as the client library for interacting with the [hashdd.com](https://www.hashdd.com) [API](https://github.com/hashdd/api_documentation), an online hash database. 
 
 # Installation
 
@@ -14,8 +14,7 @@ pip install git+https://github.com/hashdd/pyhashdd.git
 
 ### Ubuntu
 ```
-sudo apt-get install libfuzzy-dev
-sudo apt-get install libmhash-dev
+sudo apt-get install libfuzzy-dev libmhash-dev libffi-dev libssl-dev
 ```
 
 ### OSX/Darwin Prerequisites
