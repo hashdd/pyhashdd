@@ -82,7 +82,7 @@ class Features(Enum):
     FILE_ARCHITECTURE = 'hashdd_architecture'
 
 class Profile(Enum):
-    ALL = [ a for a in Algorithms ] + [ f for f in Features ]
+    ALL = [ a for a in Algorithms if a is not Algorithms.SUPPORTED_HASHES ] + [ f for f in Features ]
 
 class Status(Enum):
     KNOWN_LEVEL_GOOD = 'Good'
