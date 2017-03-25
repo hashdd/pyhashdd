@@ -52,6 +52,10 @@ class Algorithms(Enum):
     TIGER = 'hashdd_tiger'
     CONTENT_HASH = 'hashdd_content_hash'
 
+    # Supported hashes to search on hashdd.com, supporting more is easy.. just do it already! TODO
+    SUPPORTED_HASHES = [ SHA1, MD5, SHA256, SHA512, CRC32 ]
+
+
 class Features(Enum):
     UUID = 'hashdd_uuid4'
     KNOWN_LEVEL = 'hashdd_known_level'
