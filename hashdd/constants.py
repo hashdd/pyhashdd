@@ -79,3 +79,15 @@ class Features(Enum):
 
 class Profile(Enum):
     ALL = [ a for a in Algorithms ] + [ f for f in Features ]
+
+class Status(Enum):
+    KNOWN_LEVEL_GOOD = 'Good'
+    KNOWN_LEVEL_BAD = 'Bad'
+    KNOWN_LEVEL_UNKNOWN = 'Unknown'
+    NOT_FOUND = 'NOT_FOUND'
+    INVALID = 'INVALID_HASH'
+    SUCCESS = 'SUCCESS'
+    EXISTS = 'EXISTS'
+    FAILURE = 'FAILURE'
+    UNAUTHORIZED = 'UNAUTHORIZED'
+
