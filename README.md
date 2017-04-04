@@ -7,7 +7,7 @@ pyhashdd is a library for building and using hash databases. It also serves as t
 With all prerequisites installed, you can install pyhashdd with `pip`:
 
 ```
-pip install git+https://github.com/hashdd/pyhashdd.git
+pip install hashdd
 ```
 
 ## Prerequisites 
