@@ -54,18 +54,17 @@ def main():
         version = re.search(r'^\s+__version__\s*=\s*[\'"]([^\'"]*)[\'"]', config_py.read(), re.MULTILINE).group(1)
 
     setup(
-        name='pyhashdd',
+        name='hashdd',
         version=version,
         description='Official hashdd Python SDK',
         long_description=open(join(base_dir, 'README.md'), encoding='utf-8').read(),
         author='hashdd',
-        author_email='@brad_anton',
         url='https://www.hashdd.com',
         packages=find_packages(exclude=['bin', 'docs']),
         scripts=['bin/hashdd'],
         install_requires=install_requires,
         classifiers=CLASSIFIERS,
-        keywords='hashdd pyhashdd',
+        keywords=['hashdd', 'pyhashdd', 'hash database'],
         license=open('LICENSE').read()
     )
 
