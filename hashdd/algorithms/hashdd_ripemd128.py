@@ -17,12 +17,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re
+
 from algorithm import algorithm
 
 from mhashlib import ripemd128 as mripemd128
 
 class hashdd_ripemd128(algorithm):
     name = 'hashdd_ripemd128'
+    validation_regex = re.compile(r'^[a-f0-9]{32}$', re.IGNORECASE)
+    sample = 'F32A0D98929C70792E94E9656FD54E82'
 
     def setup(self, arg):
         self.h = mripemd128()

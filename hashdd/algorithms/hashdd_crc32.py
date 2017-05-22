@@ -20,11 +20,12 @@ limitations under the License.
 from algorithm import algorithm
 
 import zlib
-#import binascii 
+import re
 
-class crc32(algorithm):
+class hashdd_crc32(algorithm):
     name = 'crc32'
-    digest_size = 4
+    validation_regex = re.compile(r'^[a-f0-9]{8}$', re.IGNORECASE)
+    sample = '301E5EBC' 
 
     def setup(self, arg):
         self.__digest = 0
@@ -38,11 +39,11 @@ class crc32(algorithm):
         return self.__digest
 
     def hexdigest(self):
-        return '{:08x}'.format(self.__digest)
+        return '{:08X}'.format(self.__digest)
 
     def update(self, arg):
         self.__digest = zlib.crc32(arg, self.__digest) & 0xffffffff
         #self.__digest = binascii.crc32(arg, self.__digest) & 0xffffffff
 
 import hashlib
-hashlib.crc32 = crc32
+hashlib.hashdd_crc32 = hashdd_crc32

@@ -17,12 +17,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re
+
 from algorithm import algorithm
 
 from mhashlib import haval128 as mhaval128
 
 class hashdd_haval128(algorithm):
     name = 'hashdd_haval128'
+    validation_regex = re.compile(r'^[a-f0-9]{32}$', re.IGNORECASE)
+    sample = '0201C2C2F2FD3A38036FE5D566C34974'
 
     def setup(self, arg):
         self.h = mhaval128()

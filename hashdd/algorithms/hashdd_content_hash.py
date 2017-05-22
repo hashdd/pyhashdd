@@ -21,7 +21,7 @@ from algorithm import algorithm
 
 import hashlib
 import six
-from string import hexdigits
+import re 
 
 
 # https://github.com/dropbox/dropbox-api-content-hasher/blob/master/python/dropbox_content_hasher.py
@@ -104,8 +104,8 @@ class DropboxContentHasher(object):
 
 class hashdd_content_hash(algorithm):
     name = 'hashdd_content_hash'
-    digest_size = 64 
-    alphabet = hexdigits
+    validation_regex = re.compile(r'^[a-f0-9]{64}$', re.IGNORECASE)
+    sample = '1A2E7229BA84BC8A23794B75A7457B5FA449D4D2998B32B52FD30417E7929164'
 
     def setup(self, arg):
         self._hasher = DropboxContentHasher()

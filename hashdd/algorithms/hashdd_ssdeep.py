@@ -17,12 +17,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from algorithm import algorithm
-
+import re
 import ssdeep
+
+from algorithm import algorithm
 
 class hashdd_ssdeep(algorithm):
     name = 'hashdd_ssdeep'
+    validation_regex = re.compile(r'^[0-9]{1,}:[a-z0-9/+]{2,}:[a-z0-9/+]{2,}$', re.IGNORECASE)
+    sample = '96:hFIe+kdd/6A6Kdt4DmITQi5/0HcsQXLCWSzrSVAB1JMxCtoL6:/IexCAwMi5MHLiCWSzrSVQ1JMYo'
 
     def setup(self, arg):
         self.h = ssdeep.Hash()

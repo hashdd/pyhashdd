@@ -17,12 +17,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re
+
 from algorithm import algorithm
 
 from mhashlib import ripemd256 as mripemd256
 
 class hashdd_ripemd256(algorithm):
     name = 'hashdd_ripemd256'
+    validation_regex = re.compile(r'^[a-f0-9]{64}$', re.IGNORECASE)
+    sample = 'FD1E6FD68CAE1DD51146FD78BE3883555812A45FBD64548E9DB7533C6D30821B'
 
     def setup(self, arg):
         self.h = mripemd256()

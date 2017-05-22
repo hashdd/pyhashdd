@@ -18,11 +18,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re
+
 class algorithm(object):
     name = None
-    digest_size = None
-    block_size = 1
-    alphabet = None
+    validation_regex = None
+    sample = None # The result of hashing sample.exe
 
     def __init__(self, arg):
         self.setup(arg)
@@ -50,18 +51,14 @@ class algorithm(object):
 
     @classmethod
     def validate(self, string):
-        """Checks an input string if its length is
-        digest_size and characters are all within
-        alphabet.
+        """Checks an input string to determine if it matches the characteristics
+        of the hash
         """
-        if self.digest_size is None or self.alphabet is None:
-                raise Exception("Cannot validate string for \
+        if self.validation_regex is None:
+            raise Exception("Cannot validate string for \
                     algorithm {}, no alphabet and/or digest_size \
-                    defined".format(name))
+                    defined".format(self.name))
 
-        digest_length = self.digest_size * 2
-
-        return ( len(string) == digest_length and
-                all(c in self.alphabet for c in string))
+        return bool(self.validation_regex.match(string))
 
 

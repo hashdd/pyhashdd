@@ -17,15 +17,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from algorithm import algorithm
-
+import re
 import hashlib
-from string import hexdigits
+
+from algorithm import algorithm
 
 class hashdd_sha224(algorithm):
     name = 'hashdd_sha224'
-    digest_size = 16
-    alphabet = hexdigits
+    validation_regex = re.compile(r'^[a-f0-9]{56}$', re.IGNORECASE)
+    sample = '01FBFE4143EB82E58569CCC9308048F499A595B1A13EEED90C60D2B6'
 
     def setup(self, arg):
         self.h = hashlib.sha224()

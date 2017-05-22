@@ -17,12 +17,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re
+
 from algorithm import algorithm
 
 from mhashlib import snefru128 as msnefru128
 
 class hashdd_snefru128(algorithm):
     name = 'hashdd_snefru128'
+    validation_regex = re.compile(r'^[a-f0-9]{32}$', re.IGNORECASE)
+    sample = '1918A341C2C04C56C75FD3DA0B1A6F06'
 
     def setup(self, arg):
         self.h = msnefru128()

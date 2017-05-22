@@ -17,15 +17,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from algorithm import algorithm
-
 import hashlib
-from string import hexdigits
+import re
+
+from algorithm import algorithm
 
 class hashdd_md5w(algorithm):
     name = 'hashdd_md5w'
-    digest_size = 16
-    alphabet = hexdigits
+    validation_regex = re.compile(r'^[a-f0-9]{32}$', re.IGNORECASE)
+    sample = '670054AF1AD8A8DE128F9F8C0E94836C'
 
     def setup(self, arg):
         self.h = hashlib.md5()

@@ -18,12 +18,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re 
+
 from algorithm import algorithm
 from PyCRC.CRCCCITT import CRCCCITT
 
 class hashdd_crc16_ccitt(algorithm):
     name = 'hashdd_crc16_ccitt'
-    digest_size = 2 
+    validation_regex = re.compile(r'^[a-f0-9]{4}$', re.IGNORECASE)
+    sample = 'F07A'
 
     def setup(self, arg):
         self.__digest = 0

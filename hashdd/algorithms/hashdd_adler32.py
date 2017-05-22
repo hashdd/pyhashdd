@@ -19,6 +19,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import re
+
 from algorithm import algorithm
 
 from mhashlib import adler32 as madler32
@@ -26,9 +28,8 @@ from string import hexdigits
 
 class hashdd_adler32(algorithm):
     name = 'hashdd_adler32'
-    digest_size = 4 # 32-Bit Integer
-    alphabet = hexdigits
-
+    validation_regex = re.compile(r'^[a-f0-9]{8}$', re.IGNORECASE)
+    sample = '77B3C08A'
 
     def setup(self, arg):
         self.h = madler32()

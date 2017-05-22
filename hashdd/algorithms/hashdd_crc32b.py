@@ -17,12 +17,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re
+
 from algorithm import algorithm
 
 from mhashlib import crc32b as mcrc32b
 
 class hashdd_crc32b(algorithm):
     name = 'hashdd_crc32b'
+    validation_regex = re.compile(r'^[a-f0-9]{8}$', re.IGNORECASE)
+    sample = 'BC5E1E30'
 
     def setup(self, arg):
         self.h = mcrc32b()

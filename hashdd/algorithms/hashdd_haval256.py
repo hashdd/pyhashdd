@@ -17,12 +17,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re
+
 from algorithm import algorithm
 
 from mhashlib import haval256 as mhaval256
 
 class hashdd_haval256(algorithm):
     name = 'hashdd_haval256'
+    validation_regex = re.compile(r'^[a-f0-9]{64}$', re.IGNORECASE)
+    sample = '8A120CE2C67582EC5B6360B283F46F9BEC75735558420287F5EE41A249798B57' 
 
     def setup(self, arg):
         self.h = mhaval256()

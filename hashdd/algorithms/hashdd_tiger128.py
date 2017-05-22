@@ -17,12 +17,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re
+
 from algorithm import algorithm
 
 from mhashlib import tiger128 as mtiger128
 
 class hashdd_tiger128(algorithm):
     name = 'hashdd_tiger128'
+    validation_regex = re.compile(r'^[a-f0-9]{32}$', re.IGNORECASE)
+    sample = 'F9A5C8809291B3BB85F7217F29810AA0'
+
 
     def setup(self, arg):
         self.h = mtiger128()

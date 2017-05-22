@@ -18,12 +18,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import re
+
 from algorithm import algorithm
 
 from mhashlib import gost as mgost
 
 class hashdd_gost(algorithm):
     name = 'hashdd_gost'
+    validation_regex = re.compile(r'^[a-f0-9]{64}$', re.IGNORECASE)
+    sample = '68F5124FB7B3EAF3470B43582B83670338583B328023B23BDAF97ACD10D76787'
 
     def setup(self, arg):
         self.h = mgost()

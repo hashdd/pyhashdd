@@ -17,13 +17,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re
+
 from algorithm import algorithm
 
 from Crypto.Hash import RIPEMD 
 
 class hashdd_ripemd160(algorithm):
     name = 'hashdd_ripemd160'
-    digest_size = RIPEMD.digest_size
+    validation_regex = re.compile(r'^[a-f0-9]{40}$', re.IGNORECASE)
+    sample = 'B60D032AC971D19D0F05C6FAD8C90FCCBE25AD6A'
 
     def setup(self, arg):
         self.h = RIPEMD.new()

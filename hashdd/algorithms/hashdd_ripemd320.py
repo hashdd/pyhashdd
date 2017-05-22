@@ -17,12 +17,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re
+
 from algorithm import algorithm
 
 from mhashlib import ripemd320 as mripemd320
 
 class hashdd_ripemd320(algorithm):
     name = 'hashdd_ripemd320'
+    validation_regex = re.compile(r'^[a-f0-9]{80}$', re.IGNORECASE) 
+    sample = '202D0DDAA594F2191BFD98602EBAD1FC85DFFE23DBAA1F2129BB335C7CB8E3BC38C477F3A40D8ECB'
 
     def setup(self, arg):
         self.h = mripemd320()

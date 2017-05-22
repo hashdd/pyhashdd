@@ -1,5 +1,6 @@
 """
-@brad_anton 
+test_algorithms.py
+@brad_anton
 
 License:
  
@@ -17,24 +18,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import re
+
+import unittest
 import hashlib
 
-from algorithm import algorithm
+from hashdd.algorithms.algorithm import algorithm
 
-class hashdd_sha256(algorithm):
-    name = 'hashdd_sha256'
-    validation_regex = re.compile(r'^[a-f0-9]{64}(:.+)?$', re.IGNORECASE)
-    sample = '39E1D81353B1002E5043317CE75FA966FDD8DB215E57BC6F72681673CDDA561C'
+class TestValidation(unittest.TestCase):
+    def test_all(self):
+        algos = [ a.__name__ for a in algorithm.__subclasses__() ]
+        for module in algos:
+            if module.startswith('hashdd_'):
+                m = getattr(hashlib, module)
+                if m.sample is not None:
+                    print 'Testing {}'.format(module)
+                    self.assertTrue(m.validate(m.sample))
 
-    def setup(self, arg):
-        self.h = hashlib.sha256()
-
-    def hexdigest(self):
-        return self.h.hexdigest().upper()
-
-    def update(self, arg):
-        self.h.update(arg)
-
-import hashlib
-hashlib.hashdd_sha256 = hashdd_sha256
+if __name__ == '__main__':
+    unittest.main()

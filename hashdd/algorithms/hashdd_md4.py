@@ -17,13 +17,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import re
+
 from algorithm import algorithm
 
 from Crypto.Hash import MD4
 
 class hashdd_md4(algorithm):
     name = 'hashdd_md4'
-    digest_size = MD4.digest_size
+    validation_regex = re.compile(r'^[a-f0-9]{32}$', re.IGNORECASE)
+    sample = '7875BEB6F3F889FE3013D6E8181D48BE'
 
     def setup(self, arg):
         self.h = MD4.new()
