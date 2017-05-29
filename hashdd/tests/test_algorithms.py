@@ -27,14 +27,15 @@ from hashdd.algorithms.algorithm import algorithm
 
 class TestAlgorithms(unittest.TestCase):
     h = hashdd(filename='sample.exe')
+    result = h.safedict()
     def test_all(self):
         algos = [ a.__name__ for a in algorithm.__subclasses__() ]
         for module in algos:
             if module.startswith('hashdd_'):
                 m = getattr(hashlib, module)
                 if m.sample is not None:
-                    print 'Testing {} ({})'.format(module, self.h.result[module])
-                    self.assertTrue(self.h.result[module] == m.sample)
+                    print 'Testing {} ({})'.format(module, self.result[module])
+                    self.assertTrue(self.result[module] == m.sample)
                 else:
                     print 'Skipping {}'.format(module)
 

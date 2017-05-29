@@ -59,10 +59,10 @@ def recurse(starting, store_plaintext=False, algorithms=None, features=None, exc
                 continue
             h = hashdd(filename=join(root, f), store_plaintext=store_plaintext, 
                     algorithms=algorithms, features=features)
-            results.append(h.result)
+            results.append(h.safedict())
 
             if show:
-                print_entry(h.result)
+                print_entry(h.safedict())
 
     return results
 
@@ -209,9 +209,9 @@ and hashes that are not, to just see those that are not:
     if args.filename:
         h = hashdd(filename=args.filename, store_plaintext=args.plaintext, 
                 algorithms=algorithms, features=features)
-        results = [ h.result ]
+        results = [ h.safedict() ]
         if args.show:
-            print_entry(h.result)
+            print_entry(h.safedict() )
 
     elif args.directory:
         results = recurse(args.directory, store_plaintext=args.plaintext,

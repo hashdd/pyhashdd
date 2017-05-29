@@ -19,15 +19,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from hashes import hashes
-from profile import profile 
-
+import hashlib
 import os
+
+from os.path import join
+
+from algorithms.algorithm import algorithm
+from features.feature import feature 
 
 MAX_SIZE = 4096 * 1024 * 1024
 
-class hashdd:
-    def __init__(self,  filename=None, buffer=None, store_plaintext=False, 
+class hashdd(object):
+    def __init__(self,  filename=None, buf=None, store_plaintext=False, 
             features=None, feature_overrides=None, algorithms=None):
         """Primary class for all hashing and profiling modules.
 
@@ -41,25 +44,90 @@ class hashdd:
         feature_overrides -- Dictionary containing features and values to override the output of the module
         algorithms -- List of algorithms to use, None for all. 
         """
-        self.buffer = buffer
+        self._filename = filename
+        self._buffer = buf
+        self._store_plaintext = store_plaintext
+        self._features = features
+        self._feature_overrides = feature_overrides
+        self._algorithms = algorithms
 
-        if filename and self.buffer is None:
-            statinfo = os.stat(filename)
+        if self._filename and self._buffer is None:
+            statinfo = os.stat(self._filename)
             size = statinfo.st_size
 
-            with open(filename, 'rb') as f:
-                self.buffer = f.read()
+            with open(self._filename, 'rb') as f:
+                self._buffer = f.read()
 
             if size >= MAX_SIZE:
-                self.store_plaintext = False
+                self._store_plaintext = False
 
-        p = profile(filename=filename, buffer=self.buffer, store_plaintext=store_plaintext,
-                modules=features, overrides=feature_overrides)
-                
-        self.result = p.profile.copy()
+        self._generate_hashes()
+        self._generate_profile()
 
-        h = hashes(buffer=self.buffer, modules=algorithms)
-        self.result.update(h.__dict__)
+    def _generate_hashes(self):
+        if self._buffer is None:
+            raise Exception('No buffer provided, nothing to do')
+
+        algos = list(hashlib.algorithms)
+        for a in algorithm.__subclasses__():
+            algos.append(a.__name__)
+   
+        for module in algos:
+            """To support validation within each algorithm's
+            module, we wrap an existing implementation 
+            and name it with the 'hashdd_' prefix to avoid conflicts. 
+            We're not going to strip this prefix until the very last moment
+            as common hashes like md5 may be used in a variety of places
+            """
+            if self._algorithms is not None and module not in self._algorithms:
+                # Skip modules that are not expressly enabled
+                continue
+
+            if module.startswith('hashdd_'):
+                m = getattr(hashlib, module)
+                setattr(self, module[7:], m(self._buffer).hexdigest())
+
+    def _generate_profile(self):
+        if self._buffer is None:
+            raise Exception('No buffer provided, nothing to do')
+
+        for f in feature.__subclasses__():
+            if ( f.__name__ == 'hashdd_plaintext'
+                    and not self._store_plaintext ):
+                continue
+
+            if self._features is not None and f.__name__ not in self._features:
+                # Skip modules that are not expressly enabled
+                continue
+
+            if self._feature_overrides is not None and f.__name__ in self._feature_overrides:
+                # Override any defined values
+                setattr(self, f.__name__[7:], self._feature_overrides[f.__name__])
+                continue
+
+            setattr(self, f.__name__[7:], f(buffer=self._buffer, filename=self._filename).result )
+
+
+    def todict(self):
+        result = {} 
+        for key, value in self.__dict__.iteritems():
+            if not key.startswith('_'):
+                result[key] = value
+
+        return result
+    
+    def safedict(self):
+        result = {} 
+        for key, value in self.__dict__.iteritems():
+            if not key.startswith('_'):
+                result['hashdd_{}'.format(key)] = value
+
+        return result
+
+    def __str__(self):
+        return str(self.todict())
+    
+
 
 if __name__ == '__main__':
     raise Exception('Cannot run this module directly.')
