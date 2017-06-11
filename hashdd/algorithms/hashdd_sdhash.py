@@ -42,7 +42,7 @@ class hashdd_sdhash(algorithm):
 
     @staticmethod
     def prefilter(arg):
-        return True if len(arg) > 512 else False
+        return True if len(arg) >= 512 else False
 
     def setup(self, arg):
         self.update(arg)
