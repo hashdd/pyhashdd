@@ -27,6 +27,7 @@ from hashdd.api import client
 
 import argparse
 import os 
+import warnings 
 from os.path import join
 from pybloomfilter import BloomFilter
 from termcolor import colored
@@ -180,6 +181,8 @@ and hashes that are not, to just see those that are not:
             help='A space-separated list of file extensions to exclude. (Default: None)')
     parser.add_argument('-i', '--include', nargs='*', default=[], 
             help='A space-separated list of file extensions to include. (Default: All)')
+    parser.add_argument('-w', '--nowarnings', action='store_true', 
+            help='Supress warnings')
     parser.add_argument('--all', action='store_true',  
             help='Compute all features and hashes (Default: No)')
 
@@ -209,6 +212,7 @@ and hashes that are not, to just see those that are not:
     if args.filename:
         h = hashdd(filename=args.filename, store_plaintext=args.plaintext, 
                 algorithms=algorithms, features=features)
+
         results = [ h.safedict() ]
         if args.show:
             print_entry(h.safedict() )

@@ -1,1 +1,3 @@
 *.pyc
+venv
+hashdd.egg-info

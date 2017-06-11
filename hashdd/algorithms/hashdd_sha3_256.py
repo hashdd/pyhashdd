@@ -1,6 +1,5 @@
 """
-test_algorithms.py
-@brad_anton
+@brad_anton 
 
 License:
  
@@ -18,22 +17,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
-import unittest
+import re
 import hashlib
+import sha3
 
-from hashdd.algorithms.algorithm import algorithm
+from algorithm import algorithm
 
-class TestValidation(unittest.TestCase):
-    def test_all(self):
-        algos = [ a.__name__ for a in algorithm.__subclasses__() ]
+class hashdd_sha3_256(algorithm):
+    name = 'hashdd_sha3_256'
+    validation_regex = re.compile(r'^[a-f0-9]{64}$', re.IGNORECASE)
+    sample = '9334c701f7e1745f74654784a8dac01e92ae8a0ae53fdba1a1c48fc8c628477b'.upper()
 
-        for module in algos:
-            if module.startswith('hashdd_'):
-                m = getattr(hashlib, module)
-                if m.sample is not None:
-                    print 'Testing {}'.format(module)
-                    self.assertTrue(m.validate(m.sample))
+    def setup(self, arg):
+        self.h = hashlib.sha3_256()
 
-if __name__ == '__main__':
-    unittest.main()
+    def hexdigest(self):
+        return self.h.hexdigest().upper()
+
+    def update(self, arg):
+        self.h.update(arg)
+
+import hashlib
+hashlib.hashdd_sha3_256 = hashdd_sha3_256

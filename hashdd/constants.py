@@ -37,6 +37,11 @@ class Algorithms(Enum):
     SHA256 = 'hashdd_sha256'
     SHA384 = 'hashdd_sha384'
     SHA512 = 'hashdd_sha512' 
+    SHA3 = 'hashdd_sha3_224' 
+    SHA3_224 = 'hashdd_sha3_224' 
+    SHA3_256 = 'hashdd_sha3_256'
+    SHA3_384 = 'hashdd_sha3_384'
+    SHA3_512 = 'hashdd_sha3_512' 
     CRC16 = 'hashdd_crc16'
     CRC16_CCITT = 'hashdd_crc16_ccitt'
     CRC32 = 'hashdd_crc32'
@@ -51,6 +56,7 @@ class Algorithms(Enum):
     GOST = 'hashdd_gost'
     TIGER = 'hashdd_tiger'
     CONTENT_HASH = 'hashdd_content_hash'
+    SDHASH = 'hashdd_sdhash'
 
     # Supported hashes to search on hashdd.com, supporting more is easy.. just do it already! TODO
     SUPPORTED_HASHES = [ SHA1, MD5, SHA256, SHA512, CRC32 ]

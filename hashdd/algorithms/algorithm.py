@@ -28,6 +28,16 @@ class algorithm(object):
     def __init__(self, arg):
         self.setup(arg)
         self.update(arg)
+
+    @staticmethod
+    def prefilter(arg):
+        """
+        Override, use to inspect the input buffer
+        to determine if it meets algorithm requirements
+        (e.g. length). Return True to continue processing 
+        otherwise return False to abort
+        """
+        return True 
     
     def setup(self, arg):
         # Override
@@ -48,6 +58,7 @@ class algorithm(object):
     def copy(self):
         copy = super(self.__class__, self).__new__(self.__class__)
         return copy
+
 
     @classmethod
     def validate(self, string):

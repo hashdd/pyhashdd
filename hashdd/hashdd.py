@@ -85,7 +85,8 @@ class hashdd(object):
 
             if module.startswith('hashdd_'):
                 m = getattr(hashlib, module)
-                setattr(self, module[7:], m(self._buffer).hexdigest())
+                if m.prefilter(self._buffer):
+                    setattr(self, module[7:], m(self._buffer).hexdigest())
 
     def _generate_profile(self):
         if self._buffer is None:
