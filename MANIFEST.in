@@ -1,2 +1,7 @@
 include requirements.txt
-
+include *.md
+include setup.py
+include LICENSE
+include sample.exe
+include hashdd/version
+recursive-include libs *
