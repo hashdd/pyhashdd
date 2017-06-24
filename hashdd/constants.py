@@ -73,6 +73,9 @@ class Features(Enum):
     REQUESTED = 'hashdd_requested'
     USER = 'hashdd_user'
     PLAINTEXT = 'hashdd_plaintext'
+    SOURCE_URLS = 'hashdd_source_urls'
+    PARENTS = 'hashdd_parents'
+    CHILDREN = 'hashdd_children'
 
     # File-specific
     FILE_NAME = 'hashdd_file_name'
