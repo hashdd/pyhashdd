@@ -20,6 +20,9 @@ limitations under the License.
 """
 from enum import Enum
 
+
+MAX_SIZE = 16 * 1024 * 1024
+
 class HashLengths(Enum):
     SHA1 = 40
     MD5 = 32

@@ -42,12 +42,12 @@ def download_and_hash(url, store_plaintext=False):
         print 'Downloading: {}'.format(url)
         print 'Writing to temporary file: {}'.format(f.name)
 
-        filename = basename(urlparse(url).path)
-
         try:
             r = requests.get(url, stream=True)
 
             r.raise_for_status()
+
+            filename = basename(urlparse(r.url).path)
 
             if not filename_candidate(filename):
                 if 'content-disposition' in r.headers:

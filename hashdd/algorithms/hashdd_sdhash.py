@@ -35,6 +35,8 @@ import sdbf_class
 
 from algorithm import algorithm
 
+from hashdd.constants import MAX_SIZE
+
 class hashdd_sdhash(algorithm):
     name = 'hashdd_sdhash'
     validation_regex = re.compile(r'^sdbf:\d+:\d+:.*:\d+:.*:\d+:\d+:.*:\d+:\d+:\d+:[a-z0-9=/+]{2,}$', re.IGNORECASE)
@@ -42,7 +44,8 @@ class hashdd_sdhash(algorithm):
 
     @staticmethod
     def prefilter(arg):
-        return True if len(arg) >= 512 else False
+        length = len(arg)
+        return True if length >= 512 and length <= MAX_SIZE else False
 
     def setup(self, arg):
         self.update(arg)

@@ -26,8 +26,7 @@ from os.path import join
 
 from algorithms.algorithm import algorithm
 from features.feature import feature 
-
-MAX_SIZE = 4096 * 1024 * 1024
+from constants import MAX_SIZE
 
 class hashdd(object):
     def __init__(self,  filename=None, buf=None, store_plaintext=False, 
