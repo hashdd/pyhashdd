@@ -21,15 +21,16 @@ limitations under the License.
 
 import requests
 import re
-
+import os
 
 from requests.exceptions import HTTPError, ConnectionError
 from urlparse import urlparse
 from tempfile import NamedTemporaryFile
-from os.path import basename
+from os.path import basename, dirname
 
 from hashdd import hashdd
-from constants import Features
+from constants import Features, MAX_SIZE
+from decompressor import Decompressor, TempDirectory
 
 def filename_candidate(candidate):
     if '.' in candidate:
@@ -37,40 +38,71 @@ def filename_candidate(candidate):
             return True
     return False
 
-def download_and_hash(url, store_plaintext=False):
+def download(url, f):
+    print 'Downloading: {}'.format(url)
+    try:
+        r = requests.get(url, stream=True)
+        r.raise_for_status()
+
+        filename = basename(urlparse(r.url).path)
+
+        if not filename_candidate(filename):
+            if 'content-disposition' in r.headers:
+                filename = re.findall("filename=(.+)", r.headers['content-disposition'])
+            else:
+                filename = 'unknown'
+
+        for chunk in r.iter_content(chunk_size=1024): 
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+    except (HTTPError, ConnectionError) as e:
+        print 'Exception raised while downloading file: {}'.format(e)
+        return None 
+
+    f.seek(0)
+    return filename 
+
+def is_max(filename):
+    statinfo = os.stat(filename)
+    return statinfo.st_size >= MAX_SIZE
+
+def hashdd_helper(filename, store_plaintext, feature_overrides):
+        sp = store_plaintext if not is_max(filename) else False
+        return hashdd(filename=filename, 
+                store_plaintext=sp,
+                feature_overrides=feature_overrides)
+
+
+def extract_and_hash(f, url, parent, store_plaintext):
+    d = Decompressor(f)
+    fmt = d.get_fmt()
+    if fmt is not None:
+        with TempDirectory() as tmp_dir:
+            extracted = d.extract(fmt, tmp_dir)
+            for filename in extracted:
+                yield hashdd_helper(filename, store_plaintext, { 
+                    Features.FILE_NAME.value: [ basename(filename) ], 
+                    Features.PARENTS.value: [ parent ], 
+                    Features.FILE_ABSOLUTE_PATH.value: [ dirname(filename[len(tmp_dir)+1:]) ],
+                    Features.SOURCE_URLS.value: [ url ] 
+                    })
+
+def download_and_hash(url, store_plaintext=False, decompress=False):
     with NamedTemporaryFile() as f:
-        print 'Downloading: {}'.format(url)
-        print 'Writing to temporary file: {}'.format(f.name)
-
-        try:
-            r = requests.get(url, stream=True)
-
-            r.raise_for_status()
-
-            filename = basename(urlparse(r.url).path)
-
-            if not filename_candidate(filename):
-                if 'content-disposition' in r.headers:
-                    filename = re.findall("filename=(.+)", r.headers['content-disposition'])
-                else:
-                    filename = 'unknown'
-
-            for chunk in r.iter_content(chunk_size=1024): 
-                if chunk: # filter out keep-alive new chunks
-                    f.write(chunk)
-        except (HTTPError, ConnectionError) as e:
-            print 'Exception raised while downloading file: {}'.format(e)
-            return None
-
-        print 'Downloaded file! Using filename: {}'.format(filename)
-        feature_overrides = { Features.FILE_NAME.value: [ filename ], 
-            Features.FILE_ABSOLUTE_PATH.value: [ None ],
-            Features.SOURCE_URLS.value: [ url ]}
-
-
-        h = hashdd(filename=f.name, store_plaintext=store_plaintext, feature_overrides=feature_overrides)
-        return h
-
+        filename = download(url, f)
+        if filename is not None:
+            
+            h = hashdd_helper(f.name, store_plaintext, { 
+                Features.FILE_NAME.value: [ filename ], 
+                Features.FILE_ABSOLUTE_PATH.value: [ None ],
+                Features.SOURCE_URLS.value: [ url ] 
+                })
+            yield h
+    
+            if decompress:
+                for result in extract_and_hash(f, url, h.sha256, store_plaintext=store_plaintext):
+                    yield result
+           
 
 if __name__ == '__main__':
     print 'Cannot run this file directly!'
