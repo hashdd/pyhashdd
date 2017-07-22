@@ -24,7 +24,7 @@ import os
 
 from hashdd.constants import MAX_SIZE, Status
 
-BATCH_SIZE=500
+BATCH_SIZE = 100
 
 class client:
     def __init__(self, api_key, host="api.hashdd.com", port=443, ssl=True, verify_ssl=True):

@@ -28,7 +28,7 @@ from requests.exceptions import HTTPError, ConnectionError
 from urlparse import urlparse
 from tempfile import NamedTemporaryFile
 from os.path import basename, dirname
-from hashlib import sha1
+from hashlib import md5 
 
 from hashdd import hashdd
 from constants import Features, MAX_SIZE
@@ -113,7 +113,7 @@ def get_dir_recursive(directory):
 
     def hashfile(filename):
         with open(filename, 'rb') as f:
-            return (filename, sha1(f.read()).hexdigest().upper())
+            return (filename, md5(f.read()).hexdigest().upper())
 
     for root, _, files in os.walk(directory):
         for f in files:

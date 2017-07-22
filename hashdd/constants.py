@@ -20,8 +20,11 @@ limitations under the License.
 """
 from enum import Enum
 
-
+# Largest File Upload Size
 MAX_SIZE = 16 * 1024 * 1024
+
+# Largest Bulk Lookup
+MAX_BULK = 100
 
 class HashLengths(Enum):
     SHA1 = 40
