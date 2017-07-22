@@ -22,11 +22,13 @@ limitations under the License.
 import requests
 import re
 import os
+import os.path
 
 from requests.exceptions import HTTPError, ConnectionError
 from urlparse import urlparse
 from tempfile import NamedTemporaryFile
 from os.path import basename, dirname
+from hashlib import sha1
 
 from hashdd import hashdd
 from constants import Features, MAX_SIZE
@@ -103,6 +105,21 @@ def download_and_hash(url, store_plaintext=False, decompress=False):
                 for result in extract_and_hash(f, url, h.sha256, store_plaintext=store_plaintext):
                     yield result
            
+def get_dir_recursive(directory):
+    """Recursively grabs the SHA1 sum of 
+    all files starting at directory. For status checks. 
+    """
+    batch = []
+
+    def hashfile(filename):
+        with open(filename, 'rb') as f:
+            return (filename, sha1(f.read()).hexdigest().upper())
+
+    for root, _, files in os.walk(directory):
+        for f in files:
+            batch.append(hashfile(os.path.join(root, f)))
+
+    return list(set(batch))
 
 if __name__ == '__main__':
     print 'Cannot run this file directly!'

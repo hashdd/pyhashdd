@@ -21,6 +21,8 @@ limitations under the License.
 """
 import requests
 
+BATCH_SIZE=500
+
 class client:
     def __init__(self, api_key, host="api.hashdd.com", port=443, ssl=True, verify_ssl=True):
         """API Client for hashdd.com
@@ -60,7 +62,7 @@ class client:
 
         return res.json()
 
-    def upload(self, filename, absolute_path=None, product_code=None, opsystem_code=None):
+    def upload(self, filename, absolute_path=None, product_code=None, opsystem_code=None, known_level=None):
         """Upload a new file to hashdd.
 
         Keyword Arguments:
@@ -81,7 +83,37 @@ class client:
         if opsystem_code is not None:
             data['opsystem_code'] = opsystem_code 
 
+        # Doesn't do anything at the moment..
+        if known_level is not None:
+            data['known_level'] = known_level
+
         return self._post('upload', files=files, params=data)
+
+    def chunker(self, l, n=BATCH_SIZE):
+        """Yield successive n-sized chunks from l."""
+        for i in range(0, len(l), n):
+            yield l[i:i + n]
+
+    def _batch(self, action, hashes):
+        """Chunks up large batches and sends them in groups of BATCH_SIZE.
+
+        Keyword Arguments:
+        action -- Callable to action (e.g. self.status)
+        hashes -- A list of hashes to chunk up.
+        """
+        batch_results =  { 'chunk_results': [] }
+        for chunk in self.chunker(hashes):
+            r = action([ i[1] for i in chunk ])
+
+            # Track the overall result of each chunk
+            batch_results['chunk_results'].append( { 'result': r['result'] } )
+
+            for i in chunk:
+                filename, h = i
+                if h in r:
+                    batch_results[h] = r[h]
+                    batch_results[h]['filename'] = filename
+        return batch_results
 
     def status(self, hash_value):
         """Check the status of a hash in hashdd.
@@ -92,9 +124,8 @@ class client:
         if isinstance(hash_value, list):
             # Deduplicate
             hash_value = list(set(hash_value)) 
-            if len(hash_value) > 500:
-                # TODO: write simple function to chunk up requests
-                raise Exception('hashdd api only supports 500 hashes per query, please split your list up across multiple requests')
+            if len(hash_value) > BATCH_SIZE:
+                return self._batch(self.status, hash_value)
 
         params = { 'hash': hash_value }
 
