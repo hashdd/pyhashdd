@@ -32,6 +32,7 @@ from os.path import join
 from pybloomfilter import BloomFilter
 from termcolor import colored
 from json import dumps
+from sys import exit
 
 def print_entry(result):
     try:
@@ -187,6 +188,16 @@ and hashes that are not, to just see those that are not:
             help='Compute all features and hashes (Default: No)')
 
     args = parser.parse_args()
+
+    if args.upload:
+        from json import load
+        with open('config.json', 'rb') as f:
+            config = load(f)
+
+        cl = client(config['api_key'])
+        if args.filename:
+            print cl.upload(args.filename)
+            exit() 
 
     algorithms = None 
     if args.algorithms:

@@ -20,6 +20,9 @@ limitations under the License.
 
 """
 import requests
+import os
+
+from hashdd.constants import MAX_SIZE, Status
 
 BATCH_SIZE=500
 
@@ -54,8 +57,12 @@ class client:
         if params:
             data.update(params)
 
+        headers = requests.utils.default_headers()
+        headers.update({ 'User-Agent': 'pyhashdd/0.x.x'})
+
         try:
-            res = requests.post(ep, data=data, files=files, verify=self.verify_ssl)
+            res = requests.post(ep, data=data, headers=headers, 
+                    files=files, verify=self.verify_ssl)
             res.raise_for_status()
         except (requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
             raise Exception('[!] Unable to query hashdd: {}'.format(e))
@@ -71,6 +78,12 @@ class client:
         product_code -- NSRL RDS Product Code.
         opsystem_code -- NSRL RDS Operating System Code.
         """
+
+        statinfo = os.stat(filename)
+        if statinfo.st_size >= MAX_SIZE:
+            print 'File is too large, skipping'
+            return { 'result': Status.FAILURE.value, 'message': 'File is too large' }
+
         files = { 'file': open(filename, 'rb') }
 
         data = {} 
