@@ -32,7 +32,7 @@ from os.path import join
 from pybloomfilter import BloomFilter
 from termcolor import colored
 from json import dumps
-from sys import exit
+from sys import exit, stderr
 
 def print_entry(result):
     try:
@@ -40,7 +40,9 @@ def print_entry(result):
     except:
         print result
 
-def recurse(starting, store_plaintext=False, algorithms=None, features=None, exclude=[], include=[], show=False):
+def recurse(starting, store_plaintext=False, algorithms=None, 
+            features=None, exclude=[], include=[], show=False,
+            ignore_errors=False):
     """Recusively walks a directory starting at 'starting' and creates hashdd
     objects from each file encountered. 
 
@@ -52,20 +54,31 @@ def recurse(starting, store_plaintext=False, algorithms=None, features=None, exc
     features -- a list of hashdd.constants.Features to include in the result
     """
     results = []
+    visited = set()
     for root, dirs, files in os.walk(starting):
         for f in files:
+            fp = join(root, f)
+            if fp in visited:
+                continue
+            visited.add(fp)
             extension = f.split('.')[-1]
             if extension in exclude:
                 continue
             if include and extension not in include:
                 continue
-            h = hashdd(filename=join(root, f), store_plaintext=store_plaintext, 
-                    algorithms=algorithms, features=features)
-            results.append(h.safedict())
+            # stderr.write("Processing %s\n" % fp)
 
-            if show:
-                print_entry(h.safedict())
-
+            try:    
+                h = hashdd(filename=join(root, f), store_plaintext=store_plaintext, 
+                        algorithms=algorithms, features=features)
+                results.append(h.safedict())
+                if show:
+                    print_entry(h.safedict())
+            except:
+                if not ignore_errors:
+                    raise
+                else:
+                    print_entry({"hashdd_file_absolute_path": [fp, ]})
     return results
 
 def bloom(elements=None, filename='hashdd.bloom'):
@@ -171,6 +184,7 @@ and hashes that are not, to just see those that are not:
             help='Single file to process')
     group.add_argument('-r', '--recurse', dest='directory', type=str, nargs='?', 
             help='Directory to recursively process')
+    
 
     parser.add_argument('-a', '--algorithms', nargs='*', default=[ 'sha256' ], 
             help='A list of algorithms to include. (Default: sha256)')
@@ -180,6 +194,9 @@ and hashes that are not, to just see those that are not:
             help='Stored plaintext of files profiled (Default: false)')
     parser.add_argument('-e', '--exclude', nargs='*', default=[], 
             help='A space-separated list of file extensions to exclude. (Default: None)')
+    parser.add_argument('-q', '--ignore_errors', dest='ignore_errors',
+            default=False, action="store_true",
+            help='Ignore errors and keep processing filed')
     parser.add_argument('-i', '--include', nargs='*', default=[], 
             help='A space-separated list of file extensions to include. (Default: All)')
     parser.add_argument('-w', '--nowarnings', action='store_true', 
@@ -231,7 +248,8 @@ and hashes that are not, to just see those that are not:
     elif args.directory:
         results = recurse(args.directory, store_plaintext=args.plaintext,
                 algorithms=algorithms, features=features, exclude=args.exclude,
-                include=args.include, show=args.show)
+                include=args.include, show=args.show,
+                ignore_errors=args.ignore_errors)
 
     bloomfilter_filename = 'hashdd.bloom'
     if args.bloom:

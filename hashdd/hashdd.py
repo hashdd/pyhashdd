@@ -25,23 +25,23 @@ import os
 from os.path import join
 
 from algorithms.algorithm import algorithm
-from features.feature import feature 
+from features.feature import feature
 from constants import MAX_SIZE
 
 class hashdd(object):
-    def __init__(self,  filename=None, buf=None, store_plaintext=False, 
+    def __init__(self,  filename=None, buf=None, store_plaintext=False,
             features=None, feature_overrides=None, algorithms=None):
         """Primary class for all hashing and profiling modules.
 
         Keyword Arguments:
         filename -- Filename to evaluate. If buffer is not defined, this will open the file,
             otherwise it will use this value when building the profile
-        buffer -- Contents to evaluate. 
+        buffer -- Contents to evaluate.
         store_plaintext -- Whether or not the plaintext should be included in the resulting output,
-            this is useful for storing the content in a database. 
-        features -- List of features to use, None for all. 
+            this is useful for storing the content in a database.
+        features -- List of features to use, None for all.
         feature_overrides -- Dictionary containing features and values to override the output of the module
-        algorithms -- List of algorithms to use, None for all. 
+        algorithms -- List of algorithms to use, None for all.
         """
         self._filename = filename
         self._buffer = buf
@@ -50,18 +50,33 @@ class hashdd(object):
         self._feature_overrides = feature_overrides
         self._algorithms = algorithms
 
-        if self._filename and self._buffer is None:
-            statinfo = os.stat(self._filename)
-            size = statinfo.st_size
+        statinfo = None
+        if self._filename is not None and self._buffer is None:
+            
+            try:
+                statinfo = os.stat(self._filename)
+                size = statinfo.st_size
 
-            with open(self._filename, 'rb') as f:
-                self._buffer = f.read()
+                if size > 0:
+                    with open(self._filename, 'rb') as f:
+                        self._buffer = f.read()
 
-            if size >= MAX_SIZE:
-                self._store_plaintext = False
+                    if size >= MAX_SIZE:
+                        self._store_plaintext = False
+                else:
+                    self._buffer = ""
+            except:
+                pass
 
-        self._generate_hashes()
-        self._generate_profile()
+        if self._buffer is not None:
+            self._generate_hashes()
+            self._generate_profile()
+        elif statinfo is not None:
+            raise Exception("Unable to read file to a buffer")
+        elif statinfo is None:
+            raise Exception("Unable to read file information")
+        else:
+            raise Exception("Unknown file error")
 
     def _generate_hashes(self):
         if self._buffer is None:
@@ -70,11 +85,11 @@ class hashdd(object):
         algos = list(hashlib.algorithms)
         for a in algorithm.__subclasses__():
             algos.append(a.__name__)
-   
+
         for module in algos:
             """To support validation within each algorithm's
-            module, we wrap an existing implementation 
-            and name it with the 'hashdd_' prefix to avoid conflicts. 
+            module, we wrap an existing implementation
+            and name it with the 'hashdd_' prefix to avoid conflicts.
             We're not going to strip this prefix until the very last moment
             as common hashes like md5 may be used in a variety of places
             """
@@ -109,24 +124,22 @@ class hashdd(object):
 
 
     def todict(self):
-        result = {} 
+        result = {}
         for key, value in self.__dict__.iteritems():
             if not key.startswith('_'):
                 result[key] = value
 
         return result
-    
+
     def safedict(self):
-        result = {} 
+        result = {}
         for key, value in self.__dict__.iteritems():
             if not key.startswith('_'):
                 result['hashdd_{}'.format(key)] = value
-
         return result
 
     def __str__(self):
         return str(self.todict())
-    
 
 
 if __name__ == '__main__':
