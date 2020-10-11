@@ -6,7 +6,6 @@ numpy==1.19.2
 Pillow==7.2.0
 py-mhash==1.2
 pycparser==2.20
-pycrypto==2.6.1
 pyparsing==2.4.7
 pysha3==1.0.2
 python-magic==0.4.18
