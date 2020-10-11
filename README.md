@@ -22,7 +22,7 @@ sudo apt-get install libfuzzy-dev libmhash-dev libffi-dev libssl-dev
 brew install ssdeep
 ```
 
-**Note: ** Due to a [bug in py-mhash](https://github.com/niwinz/py-mhash/pull/4), pyhashdd on OSX may cause a free error when generating certain hash types. As a workaround until the maintainer accepts the open pull request, please install from this repository:
+** Note: ** Due to a [bug in py-mhash](https://github.com/niwinz/py-mhash/pull/4), pyhashdd on OSX may cause a free error when generating certain hash types. As a workaround until the maintainer accepts the open pull request, please install from this repository:
 
 ```
 pip install git+https://github.com/brad-anton/py-mhash.git
