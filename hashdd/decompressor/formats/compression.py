@@ -64,5 +64,5 @@ def get_compressed_file(filename):
 filename='test.zip'
 cf = get_compressed_file(filename)
 if cf is not None:
-    print filename, 'is a', cf.mime_type, 'file'
-    print cf.accessor
+    print(filename, 'is a', cf.mime_type, 'file')
+    print(cf.accessor)

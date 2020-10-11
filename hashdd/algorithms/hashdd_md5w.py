@@ -20,7 +20,7 @@ limitations under the License.
 import hashlib
 import re
 
-from algorithm import algorithm
+from .algorithm import algorithm
 
 class hashdd_md5w(algorithm):
     name = 'hashdd_md5w'
@@ -35,7 +35,6 @@ class hashdd_md5w(algorithm):
 
     def update(self, arg):
         arg = arg.split(None)
-        self.h.update(''.join(arg))
+        self.h.update(b''.join(arg))
 
-import hashlib
 hashlib.hashdd_md5w = hashdd_md5w 

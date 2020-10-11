@@ -20,7 +20,7 @@ limitations under the License.
 import re
 import hashlib
 
-from algorithm import algorithm
+from .algorithm import algorithm
 
 class hashdd_sha384(algorithm):
     name = 'hashdd_sha384'

@@ -18,10 +18,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import re
-
-from algorithm import algorithm
+import hashlib
 
 from mhashlib import ripemd256 as mripemd256
+
+from .algorithm import algorithm
 
 class hashdd_ripemd256(algorithm):
     name = 'hashdd_ripemd256'
@@ -35,10 +36,9 @@ class hashdd_ripemd256(algorithm):
         return self.h.digest()
 
     def hexdigest(self):
-        return self.h.hexdigest().upper()
+        return self.h.hexdigest().upper().decode()
 
     def update(self, arg):
         self.h.update(arg)
 
-import hashlib
 hashlib.hashdd_ripemd256 = hashdd_ripemd256

@@ -29,11 +29,12 @@ for fullname in glob.glob(os.path.dirname(__file__) + "/*.py"):
     else:
         try:
             __import__("hashdd.algorithms." + name[:-3])
-        except:
+        except (Exception) as e:
             msg = ("{} import aborted due to ImportError. Certain modules"
                     " can only be run on specific operating systems, or require compilation."
                     " It is safe to ignore this message unless you'd like to use this specific"
                     " Algorithm.".format(name[:-3]))
             warn(msg)
+            warn(e)
             pass
 

@@ -18,10 +18,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import re
-
-from algorithm import algorithm
+import hashlib
 
 from mhashlib import tiger128 as mtiger128
+
+from .algorithm import algorithm
 
 class hashdd_tiger128(algorithm):
     name = 'hashdd_tiger128'
@@ -36,10 +37,9 @@ class hashdd_tiger128(algorithm):
         return self.h.digest()
 
     def hexdigest(self):
-        return self.h.hexdigest().upper()
+        return self.h.hexdigest().upper().decode()
 
     def update(self, arg):
         self.h.update(arg)
 
-import hashlib
 hashlib.hashdd_tiger128 = hashdd_tiger128

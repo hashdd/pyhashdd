@@ -26,13 +26,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
-
-
 import re
-import tlsh 
+import hashlib
 
-from algorithm import algorithm
+from hashdd.algorithms import tlsh
+from hashdd.algorithms.algorithm import algorithm
 
 class hashdd_tlsh(algorithm):
     name = 'hashdd_tlsh'
@@ -53,6 +51,4 @@ class hashdd_tlsh(algorithm):
     def update(self, arg):
         self.h.update(arg)
 
-
-import hashlib
 hashlib.hashdd_tlsh = hashdd_tlsh 

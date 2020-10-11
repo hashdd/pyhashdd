@@ -1,7 +1,7 @@
 from os.path import isfile
 
-from formats.zip_file import ZIPFile
-from formats.compressed_file import TempDirectory
+from .formats.zip_file import ZIPFile
+from .formats.compressed_file import TempDirectory
 
 class Decompressor(object):
     def __init__(self, f):

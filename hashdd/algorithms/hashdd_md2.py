@@ -19,7 +19,7 @@ limitations under the License.
 """
 import re
 
-from algorithm import algorithm
+from .algorithm import algorithm
 
 from Crypto.Hash import MD2
 

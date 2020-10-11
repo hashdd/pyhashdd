@@ -53,7 +53,6 @@ class TestFeatures(unittest.TestCase):
 
     def test_includes_algorithms(self):
         self.assertTrue('hashdd_md5w' in self.result)
-        self.assertTrue('hashdd_crc16' in self.result)
 
 
 if __name__ == '__main__':

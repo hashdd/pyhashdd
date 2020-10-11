@@ -25,14 +25,14 @@ import os
 import os.path
 
 from requests.exceptions import HTTPError, ConnectionError
-from urlparse import urlparse
+from urllib.parse import urlparse
 from tempfile import NamedTemporaryFile
 from os.path import basename, dirname
 from hashlib import md5 
 
-from hashdd import hashdd
-from constants import Features, MAX_SIZE
-from decompressor import Decompressor, TempDirectory
+from .hashdd import hashdd
+from .constants import Features, MAX_SIZE
+from .decompressor import Decompressor, TempDirectory
 
 def filename_candidate(candidate):
     if '.' in candidate:
@@ -41,7 +41,7 @@ def filename_candidate(candidate):
     return False
 
 def download(url, f):
-    print 'Downloading: {}'.format(url)
+    print('Downloading: {}'.format(url))
     try:
         r = requests.get(url, stream=True)
         r.raise_for_status()
@@ -58,7 +58,7 @@ def download(url, f):
             if chunk: # filter out keep-alive new chunks
                 f.write(chunk)
     except (HTTPError, ConnectionError) as e:
-        print 'Exception raised while downloading file: {}'.format(e)
+        print('Exception raised while downloading file: {}'.format(e))
         return None 
 
     f.seek(0)
@@ -122,4 +122,4 @@ def get_dir_recursive(directory):
     return list(set(batch))
 
 if __name__ == '__main__':
-    print 'Cannot run this file directly!'
+    print('Cannot run this file directly!')
