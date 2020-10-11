@@ -27,14 +27,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
-
-
 import re
-import sdbf_class 
+import hashlib
 
-from algorithm import algorithm
-
+from hashdd.algorithms import sdbf_class 
+from hashdd.algorithms.algorithm import algorithm
 from hashdd.constants import MAX_SIZE
 
 class hashdd_sdhash(algorithm):
@@ -51,11 +48,12 @@ class hashdd_sdhash(algorithm):
         self.update(arg)
 
     def hexdigest(self):
-        return self.h.to_string().replace('\n', '')
+        # sdhashes have a trailing newline
+        res = self.h.to_string().replace('\n', '')
+        return res
 
     def update(self, arg):
-        self.h = sdbf_class.sdbf('unknown', arg, 0, len(arg), None)
+        self.h = sdbf_class.sdbf("unknown", arg, 0, len(arg), None)
 
 
-import hashlib
 hashlib.hashdd_sdhash = hashdd_sdhash 

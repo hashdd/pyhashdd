@@ -24,9 +24,9 @@ import os
 
 from os.path import join
 
-from algorithms.algorithm import algorithm
-from features.feature import feature
-from constants import MAX_SIZE
+from .algorithms.algorithm import algorithm
+from .features.feature import feature
+from .constants import MAX_SIZE
 
 class hashdd(object):
     def __init__(self,  filename=None, buf=None, store_plaintext=False,
@@ -82,7 +82,7 @@ class hashdd(object):
         if self._buffer is None:
             raise Exception('No buffer provided, nothing to do')
 
-        algos = list(hashlib.algorithms)
+        algos = list(hashlib.algorithms_available)
         for a in algorithm.__subclasses__():
             algos.append(a.__name__)
 
@@ -125,7 +125,7 @@ class hashdd(object):
 
     def todict(self):
         result = {}
-        for key, value in self.__dict__.iteritems():
+        for key, value in self.__dict__.items():
             if not key.startswith('_'):
                 result[key] = value
 
@@ -133,7 +133,7 @@ class hashdd(object):
 
     def safedict(self):
         result = {}
-        for key, value in self.__dict__.iteritems():
+        for key, value in self.__dict__.items():
             if not key.startswith('_'):
                 result['hashdd_{}'.format(key)] = value
         return result

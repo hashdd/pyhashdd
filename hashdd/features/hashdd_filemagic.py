@@ -19,7 +19,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import magic 
-from feature import feature
+from .feature import feature
 
 class hashdd_filemagic(feature):
     def process(self):

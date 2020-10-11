@@ -18,7 +18,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from feature import feature
+from .feature import feature
 from uuid import uuid4
 
 class hashdd_uuid4(feature):

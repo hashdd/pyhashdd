@@ -34,10 +34,11 @@ class TestAlgorithms(unittest.TestCase):
             if module.startswith('hashdd_'):
                 m = getattr(hashlib, module)
                 if m.sample is not None:
-                    print 'Testing {} ({})'.format(module, self.result[module])
-                    self.assertTrue(self.result[module] == m.sample)
+                    print('Testing {}'.format(module))
+                    print('Testing {} ({})'.format(module, self.result[module]))
+                    self.assertEqual(self.result[module], m.sample)
                 else:
-                    print 'Skipping {}'.format(module)
+                    print('Skipping {}'.format(module))
 
 if __name__ == '__main__':
     unittest.main()

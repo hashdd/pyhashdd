@@ -18,10 +18,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import re
-
-from algorithm import algorithm
+import hashlib
 
 from mhashlib import haval256 as mhaval256
+
+from .algorithm import algorithm
 
 class hashdd_haval256(algorithm):
     name = 'hashdd_haval256'
@@ -35,10 +36,9 @@ class hashdd_haval256(algorithm):
         return self.h.digest()
 
     def hexdigest(self):
-        return self.h.hexdigest().upper()
+        return self.h.hexdigest().upper().decode()
 
     def update(self, arg):
         self.h.update(arg)
 
-import hashlib
 hashlib.hashdd_haval256 = hashdd_haval256

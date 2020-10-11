@@ -1,6 +1,6 @@
 import zipfile
 
-from compressed_file import CompressedFile 
+from .compressed_file import CompressedFile 
 
 class ZIPFile (CompressedFile):
     magic = '\x50\x4b\x03\x04'

@@ -1,1 +1,1 @@
-from decompressor import Decompressor, TempDirectory
+from .decompressor import Decompressor, TempDirectory

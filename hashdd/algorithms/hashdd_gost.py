@@ -20,7 +20,7 @@ limitations under the License.
 
 import re
 
-from algorithm import algorithm
+from .algorithm import algorithm
 
 from mhashlib import gost as mgost
 
@@ -33,7 +33,7 @@ class hashdd_gost(algorithm):
         self.h = mgost()
 
     def hexdigest(self):
-        return self.h.hexdigest().upper()
+        return self.h.hexdigest().upper().decode()
 
     def update(self, arg):
         self.h.update(arg)

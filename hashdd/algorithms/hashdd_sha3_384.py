@@ -21,7 +21,7 @@ import re
 import hashlib
 import sha3
 
-from algorithm import algorithm
+from .algorithm import algorithm
 
 class hashdd_sha3_384(algorithm):
     name = 'hashdd_sha3_384'

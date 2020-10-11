@@ -20,11 +20,11 @@ limitations under the License.
 """
 
 import re
+import hashlib
 
-from algorithm import algorithm
+from .algorithm import algorithm
 
 from mhashlib import adler32 as madler32
-from string import hexdigits
 
 class hashdd_adler32(algorithm):
     name = 'hashdd_adler32'
@@ -38,11 +38,9 @@ class hashdd_adler32(algorithm):
         return self.h.digest()
 
     def hexdigest(self):
-        return self.h.hexdigest().upper()
+        return self.h.hexdigest().upper().decode()
 
     def update(self, arg):
         self.h.update(arg)
 
-
-import hashlib
 hashlib.hashdd_adler32 = hashdd_adler32

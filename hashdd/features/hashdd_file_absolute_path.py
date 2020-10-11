@@ -19,7 +19,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from feature import feature
+from .feature import feature
 import os
 
 class hashdd_file_absolute_path(feature):

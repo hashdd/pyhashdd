@@ -19,7 +19,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import os
-from feature import feature
+from .feature import feature
 
 class hashdd_size(feature):
     def process(self):

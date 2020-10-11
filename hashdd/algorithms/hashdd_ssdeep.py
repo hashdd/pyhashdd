@@ -20,7 +20,7 @@ limitations under the License.
 import re
 import ssdeep
 
-from algorithm import algorithm
+from .algorithm import algorithm
 
 class hashdd_ssdeep(algorithm):
     name = 'hashdd_ssdeep'

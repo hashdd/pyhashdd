@@ -81,7 +81,7 @@ class client:
 
         statinfo = os.stat(filename)
         if statinfo.st_size >= MAX_SIZE:
-            print 'File is too large, skipping'
+            print('File is too large, skipping')
             return { 'result': Status.FAILURE.value, 'message': 'File is too large' }
 
         files = { 'file': open(filename, 'rb') }

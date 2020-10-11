@@ -65,11 +65,11 @@ def copy_libs():
         libs = get_libs(t)
         for l in libs:
             dst = join('hashdd', '{}'.format(t), basename(l))
-            print 'Prep: Copying {} to {}'.format(l, dst)
+            print('Prep: Copying {} to {}'.format(l, dst))
             copyfile(l, dst)
             package_data.append(join('{}'.format(t), basename(l)))
 
-    print package_data
+    print(package_data)
     return package_data
 
 
