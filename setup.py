@@ -97,7 +97,7 @@ def main():
         install_requires=install_requires,
         classifiers=CLASSIFIERS,
         keywords=['hashdd', 'pyhashdd', 'hash database'],
-        license=open('LICENSE').read(),
+        license="Apache License 2.0",
         python_requires='>=3.7'
     )
 
