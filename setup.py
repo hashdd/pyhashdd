@@ -75,14 +75,19 @@ def copy_libs():
 def main():
     base_dir = dirname(__file__)
     install_requires = open('requirements.txt').read().splitlines()
+
     with open('hashdd/version', 'r', encoding='utf-8') as config_py:
         version = re.search(r'^\s+__version__\s*=\s*[\'"]([^\'"]*)[\'"]', config_py.read(), re.MULTILINE).group(1)
+
+    with open("README.md", "r") as fh:
+        long_description = fh.read()
 
     setup(
         name='hashdd',
         version=version,
         description='Official hashdd Python SDK',
-        long_description=open(join(base_dir, 'README.md'), encoding='utf-8').read(),
+        long_description=long_description,
+        long_description_content_type="text/markdown",
         author='hashdd',
         url='https://www.hashdd.com',
         packages=find_packages(exclude=['bin', 'docs', 'libs']),
