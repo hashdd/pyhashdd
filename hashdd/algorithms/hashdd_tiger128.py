@@ -20,9 +20,8 @@ limitations under the License.
 import re
 import hashlib
 
-from mhashlib import tiger128 as mtiger128
-
-from .algorithm import algorithm
+from hashdd.algorithms.algorithm import algorithm
+from hashdd.mhashlib import tiger128 as mtiger128
 
 class hashdd_tiger128(algorithm):
     name = 'hashdd_tiger128'

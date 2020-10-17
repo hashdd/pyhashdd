@@ -19,10 +19,9 @@ limitations under the License.
 """
 import re
 import hashlib
+from hashdd.algorithms.algorithm import algorithm
+from hashdd.mhashlib import haval128 as mhaval128
 
-from mhashlib import haval128 as mhaval128
-
-from .algorithm import algorithm
 
 class hashdd_haval128(algorithm):
     name = 'hashdd_haval128'

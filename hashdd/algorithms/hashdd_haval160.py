@@ -20,9 +20,8 @@ limitations under the License.
 import re
 import hashlib
 
-from mhashlib import haval160 as mhaval160
-
-from .algorithm import algorithm
+from hashdd.algorithms.algorithm import algorithm
+from hashdd.mhashlib import haval160 as mhaval160
 
 class hashdd_haval160(algorithm):
     name = 'hashdd_haval160'

@@ -19,10 +19,10 @@ limitations under the License.
 """
 
 import re
+import hashlib
 
-from .algorithm import algorithm
-
-from mhashlib import gost as mgost
+from hashdd.algorithms.algorithm import algorithm
+from hashdd.mhashlib import gost as mgost
 
 class hashdd_gost(algorithm):
     name = 'hashdd_gost'
@@ -38,5 +38,4 @@ class hashdd_gost(algorithm):
     def update(self, arg):
         self.h.update(arg)
 
-import hashlib
 hashlib.hashdd_gost = hashdd_gost 

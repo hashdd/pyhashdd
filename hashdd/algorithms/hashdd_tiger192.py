@@ -20,9 +20,8 @@ limitations under the License.
 import re
 import hashlib
 
-from mhashlib import tiger192 as mtiger192
-
-from .algorithm import algorithm
+from hashdd.algorithms.algorithm import algorithm
+from hashdd.mhashlib import tiger192 as mtiger192
 
 class hashdd_tiger192(algorithm):
     name = 'hashdd_tiger192'
