@@ -20,9 +20,8 @@ limitations under the License.
 import re
 import hashlib
 
-from mhashlib import crc32b as mcrc32b
-
-from .algorithm import algorithm
+from hashdd.algorithms.algorithm import algorithm
+from hashdd.mhashlib import crc32b as mcrc32b
 
 class hashdd_crc32b(algorithm):
     name = 'hashdd_crc32b'

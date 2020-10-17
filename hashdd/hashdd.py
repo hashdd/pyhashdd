@@ -24,9 +24,9 @@ import os
 
 from os.path import join
 
-from .algorithms.algorithm import algorithm
-from .features.feature import feature
-from .constants import MAX_SIZE
+from hashdd.algorithms.algorithm import algorithm
+from hashdd.features.feature import feature
+from hashdd.constants import MAX_SIZE
 
 class hashdd(object):
     def __init__(self,  filename=None, buf=None, store_plaintext=False,
@@ -77,6 +77,21 @@ class hashdd(object):
             raise Exception("Unable to read file information")
         else:
             raise Exception("Unknown file error")
+    
+    @staticmethod
+    def algorithms_available():
+        """Return a list of hashdd algorithms currently available"""
+        available = []
+
+        algos = list(hashlib.algorithms_available)
+        for a in algorithm.__subclasses__():
+            algos.append(a.__name__)
+
+        for module in algos:
+            if module.startswith('hashdd_'):
+                available.append(module)
+
+        return available
 
     def _generate_hashes(self):
         if self._buffer is None:
@@ -132,6 +147,10 @@ class hashdd(object):
         return result
 
     def safedict(self):
+        """Return a dictionary that can be safely merged with another that may have 
+        keys named after hashing algorithms (e.g. md5, sha256). It's considered safe 
+        because the keys of the dictionary are prefixed with "hashdd_".
+        """
         result = {}
         for key, value in self.__dict__.items():
             if not key.startswith('_'):

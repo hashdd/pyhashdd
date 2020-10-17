@@ -20,9 +20,8 @@ limitations under the License.
 import re
 import hashlib 
 
-from mhashlib import snefru128 as msnefru128
-
-from .algorithm import algorithm
+from hashdd.algorithms.algorithm import algorithm
+from hashdd.mhashlib import snefru128 as msnefru128
 
 class hashdd_snefru128(algorithm):
     name = 'hashdd_snefru128'

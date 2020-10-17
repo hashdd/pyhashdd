@@ -20,9 +20,8 @@ limitations under the License.
 import re
 import hashlib
 
-from mhashlib import whirlpool as mwhirlpool
-
-from .algorithm import algorithm
+from hashdd.algorithms.algorithm import algorithm
+from hashdd.mhashlib import whirlpool as mwhirlpool
 
 class hashdd_whirlpool(algorithm):
     name = 'hashdd_whirlpool'

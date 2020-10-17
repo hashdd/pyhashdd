@@ -20,9 +20,8 @@ limitations under the License.
 import re
 import hashlib
 
-from mhashlib import ripemd128 as mripemd128
-
-from .algorithm import algorithm
+from hashdd.algorithms.algorithm import algorithm
+from hashdd.mhashlib import ripemd128 as mripemd128
 
 class hashdd_ripemd128(algorithm):
     name = 'hashdd_ripemd128'

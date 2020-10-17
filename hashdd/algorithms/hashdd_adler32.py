@@ -22,9 +22,8 @@ limitations under the License.
 import re
 import hashlib
 
-from .algorithm import algorithm
-
-from mhashlib import adler32 as madler32
+from hashdd.algorithms.algorithm import algorithm
+from hashdd.mhashlib import adler32 as madler32
 
 class hashdd_adler32(algorithm):
     name = 'hashdd_adler32'
