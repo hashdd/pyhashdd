@@ -84,6 +84,11 @@ To hash a file using all algorithms and features, then store the results in Mong
 
 ```
 
+# Testing
+```
+python -m unittest discover -s tests/
+```
+
 # `py-mhash` and `mhashlib`
 
-Back in 2017 [we fixed an issue in py-mhash](https://github.com/niwinz/py-mhash/pull/4) which was merged into the git repository, however this fix was not built as part of the distribution in PyPi. Rather then rely on the package maintainer any further, we've bundled in `py-mhash` with hashdd. Please see the [py-mash license](https://github.com/niwinz/py-mhash/blob/master/LICENSE) for copywrite information. 
+Back in 2017 [we fixed an issue in py-mhash](https://github.com/niwinz/py-mhash/pull/4) which was merged into the git repository, however this fix was not built as part of the distribution in PyPi. Rather then rely on the package maintainer any further, we've bundled in `py-mhash` with hashdd. Please see the [py-mash license](https://github.com/niwinz/py-mhash/blob/master/LICENSE) for copyright information. 
