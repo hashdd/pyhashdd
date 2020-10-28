@@ -5,7 +5,6 @@ WORKDIR /usr/src/app
 # Copy all our hashdd files to the container
 COPY . .
 
-
 # We'll need to build sdhash, so lets install depends
 RUN apt-get -qq -y update && apt-get -qq -y --no-install-recommends install \
         libfuzzy-dev \

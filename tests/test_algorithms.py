@@ -32,7 +32,7 @@ class TestAlgorithms(unittest.TestCase):
 
             We have all algorithms in individual tests to call out those not supported on this system
         """
-        h = hashdd(filename='sample.exe')
+        h = hashdd(filename=self.TEST_FILENAME)
         result = h.safedict()
         algos = [ a.__name__ for a in algorithm.__subclasses__() ]
         for module in algos:

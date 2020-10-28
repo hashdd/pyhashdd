@@ -7,6 +7,7 @@ from hashdd.features import feature
 
 class TestHashdd(unittest.TestCase):
     TEST_FILENAME="tests/data/sample.exe"
+    TEST_FILENAME_ZERO="tests/data/file_size_zero.txt"
 
     
     def check_hashdd(self, todict, safedict):
@@ -43,6 +44,19 @@ class TestHashdd(unittest.TestCase):
         self.assertIsInstance(sd, dict)
         
         self.check_hashdd(d, sd)
+
+        # Check zero-sized file
+        h = hashdd(filename=self.TEST_FILENAME_ZERO)
+        self.assertIsNotNone(h)
+
+        d = h.todict()
+        self.assertIsInstance(d, dict)
+
+        sd = h.safedict()
+        self.assertIsInstance(sd, dict)
+        
+        # Dont check algorithms, just check features
+        # self.check_hashdd(d, sd)
 
     def test_hashdd_buffer(self):
         with open(self.TEST_FILENAME, 'rb') as f:

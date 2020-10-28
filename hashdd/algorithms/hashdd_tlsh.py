@@ -46,7 +46,16 @@ class hashdd_tlsh(algorithm):
 
     def hexdigest(self):
         self.h.final()
-        return self.h.hexdigest()
+        try:
+            return self.h.hexdigest()
+        except (ValueError) as e:
+            """If there isnt enough variation in the input the tlsh module 
+            will return a ValueError. There doesn't seem to be a good place to
+            figure this out up front for a prefilter so we just catch and return
+            None
+            """
+            return None
+            
 
     def update(self, arg):
         self.h.update(arg)

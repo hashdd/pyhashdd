@@ -32,7 +32,6 @@ class TestValidation(unittest.TestCase):
             if module.startswith('hashdd_'):
                 m = getattr(hashlib, module)
                 if m.sample is not None:
-                    print('Testing {}'.format(module))
                     self.assertTrue(m.validate(m.sample))
 
 if __name__ == '__main__':

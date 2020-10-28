@@ -24,8 +24,11 @@ import unittest
 from hashdd import hashdd
 
 class TestFeatures(unittest.TestCase):
-    h = hashdd(filename='sample.exe')
-    result = h.safedict()
+    TEST_FILENAME='tests/data/sample.exe'
+
+    def setUp(self):
+        h = hashdd(filename=self.TEST_FILENAME)
+        self.result = h.safedict()
 
     def test_known_level(self):
         self.assertEqual(self.result['hashdd_known_level'], 'Unknown')

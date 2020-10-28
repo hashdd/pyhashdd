@@ -56,7 +56,6 @@ class hashdd(object):
             try:
                 statinfo = os.stat(self._filename)
                 size = statinfo.st_size
-
                 if size > 0:
                     with open(self._filename, 'rb') as f:
                         self._buffer = f.read()
@@ -65,10 +64,13 @@ class hashdd(object):
                         self._store_plaintext = False
                 else:
                     self._buffer = ""
-            except:
+            except (Exception) as e:
                 pass
 
-        if self._buffer is not None:
+        if statinfo is not None and self._buffer == "":
+            # If we could stat the file but buffer wasnt set, lets just generate profile info
+            self._generate_profile()
+        elif self._buffer:
             self._generate_hashes()
             self._generate_profile()
         elif statinfo is not None:

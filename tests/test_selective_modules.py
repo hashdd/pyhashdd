@@ -26,10 +26,12 @@ from hashdd import hashdd
 class TestFeatures(unittest.TestCase):
     """Unittests for defining selective modules and overrides
     """
-    overrides = { 'hashdd_file_absolute_path': 'test/', 'hashdd_size': 0 }
-    h = hashdd(filename='sample.exe', features=['hashdd_file_name', 'hashdd_file_absolute_path'],
-            feature_overrides=overrides, algorithms=['hashdd_md5w', 'hashdd_crc16'] )
-    result = h.safedict()
+    TEST_FILENAME='tests/data/sample.exe'
+    def setUp(self):
+        overrides = { 'hashdd_file_absolute_path': 'test/', 'hashdd_size': 0 }
+        h = hashdd(filename=self.TEST_FILENAME, features=['hashdd_file_name', 'hashdd_file_absolute_path'],
+                feature_overrides=overrides, algorithms=['hashdd_md5w', 'hashdd_crc16'] )
+        self.result = h.safedict()
 
     def test_includes_removal(self):
         """When a list of features is provided, no other modules
