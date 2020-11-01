@@ -24,5 +24,7 @@ import os
 
 class hashdd_file_name(feature):
     def process(self):
-        return [ os.path.basename(self.filename) ]
+        if self.filename:
+            return [ os.path.basename(self.filename) ]
+        return None
 

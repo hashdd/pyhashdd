@@ -38,22 +38,37 @@ class hashdd_sdhash(algorithm):
     name = 'hashdd_sdhash'
     validation_regex = re.compile(r'^sdbf:\d+:\d+:.*:\d+:.*:\d+:\d+:.*:\d+:\d+:\d+:[a-z0-9=/+]{2,}$', re.IGNORECASE)
     sample = 'sdbf:03:7:unknown:8192:sha1:256:5:7ff:160:1:102:4QAIjJHDBGBAEMECLJgsIEAgMCAAABQiqQKEAWkAmKEPZIBIQiIMggJACQIQjAAAIRaAaGCCwJbAAIAUVIRE4BAIREQQBAEAAMFCBqI7ACDBGkAywSLUoJTQCkgBJASECEIJgmBwrREAAysIggSUQEAAIBAAwCABIhCIBhhBEAAgBEFgwABAItABhAC8IEaCyDgAEZgGAE4AcOCiAAiiEtlBoEDACAAAhiIqAIhBQEACEAAAUCAsBmBCQQEAEARAipkwKKAEAGiAwiYMIBICYQOAAoAwCQEobABAElgBEcAAIpEoEgoogLFAISCUBLCoBMLAQAEQgBIQAEYBqVgFQw=='
+    implements_readfile = True
 
     @staticmethod
     def prefilter(arg):
         length = len(arg)
         return True if length >= 512 and length <= MAX_SIZE else False
+    
+    def readfile(self, filename):
+        self.filename = filename
+        self.h = sdbf_class.sdbf(filename, 0)
 
     def setup(self, arg):
+        self.h = None
         self.update(arg)
 
     def hexdigest(self):
         # sdhashes have a trailing newline
         res = self.h.to_string().replace('\n', '')
+
+        # This is gnarly, sdbf includes filename and length in the hash output, but not when we read from a buffer
+        # so we're going to strip that out if we used hashdd_sdhash.readfile()
+        used_readfile = getattr(self, 'filename', None)
+        if used_readfile:
+            parts = res.split(':')
+            res = ':'.join(parts[0:2]) + ':7:unknown:' + ':'.join(parts[4:])
+
         return res
 
     def update(self, arg):
-        self.h = sdbf_class.sdbf("unknown", arg, 0, len(arg), None)
+        if arg:
+            self.h = sdbf_class.sdbf("unknown", arg, 0, len(arg), None)
 
 
 hashlib.hashdd_sdhash = hashdd_sdhash 

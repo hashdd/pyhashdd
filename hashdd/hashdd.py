@@ -21,14 +21,17 @@ limitations under the License.
 
 import hashlib
 import os
+import logging
 
 from os.path import join
+from functools import partial
 
 from hashdd.algorithms.algorithm import algorithm
 from hashdd.features.feature import feature
 from hashdd.constants import MAX_SIZE
 
 class hashdd(object):
+    CHUNK_SIZE=8192
     def __init__(self,  filename=None, buf=None, store_plaintext=False,
             features=None, feature_overrides=None, algorithms=None):
         """Primary class for all hashing and profiling modules.
@@ -43,42 +46,40 @@ class hashdd(object):
         feature_overrides -- Dictionary containing features and values to override the output of the module
         algorithms -- List of algorithms to use, None for all.
         """
+        self._logger = logging.getLogger('hashdd')
         self._filename = filename
         self._buffer = buf
         self._store_plaintext = store_plaintext
         self._features = features
         self._feature_overrides = feature_overrides
         self._algorithms = algorithms
-
-        statinfo = None
-        if self._filename is not None and self._buffer is None:
+        self._filename_size = None
             
-            try:
-                statinfo = os.stat(self._filename)
-                size = statinfo.st_size
-                if size > 0:
-                    with open(self._filename, 'rb') as f:
-                        self._buffer = f.read()
 
-                    if size >= MAX_SIZE:
-                        self._store_plaintext = False
-                else:
-                    self._buffer = ""
-            except (Exception) as e:
-                pass
+        if not self._filename and not self._buffer:
+            raise Exception('Neither buf or filename is defined')
 
-        if statinfo is not None and self._buffer == "":
-            # If we could stat the file but buffer wasnt set, lets just generate profile info
-            self._generate_profile()
+        if self._filename and self._buffer:
+            raise Exception('Must define either buf or filename, both cannot be set')
+
+        if self._filename:
+            statinfo = os.stat(self._filename)
+            if statinfo is None:
+                raise Exception(f'Cannot stat filename {self._filename}')
+            
+            self._filename_size = statinfo.st_size
+            if self._filename_size is None:
+                raise Exception(f'Cannot read file size of {self._filename}')
+
+            if self._filename_size >= MAX_SIZE:
+                self._store_plaintext = False
+        
         elif self._buffer:
-            self._generate_hashes()
-            self._generate_profile()
-        elif statinfo is not None:
-            raise Exception("Unable to read file to a buffer")
-        elif statinfo is None:
-            raise Exception("Unable to read file information")
-        else:
-            raise Exception("Unknown file error")
+            # No special handling for buffers
+            pass
+
+        self._generate_hashes()
+        self._generate_profile()
     
     @staticmethod
     def algorithms_available():
@@ -95,10 +96,35 @@ class hashdd(object):
 
         return available
 
-    def _generate_hashes(self):
-        if self._buffer is None:
-            raise Exception('No buffer provided, nothing to do')
+    def _runmod_algo(self, algorithmname):
+        if not self._buffer and self._filename_size == 0:
+            return None
 
+        module = getattr(hashlib, algorithmname)
+
+        hexdigest = None
+        if self._buffer:
+            # For buffers we use prefilter, for chunked files, we don't
+            if module.prefilter(self._buffer):
+                hexdigest = module(self._buffer).hexdigest()
+        elif self._filename:
+            m = module(b'')
+
+            if m.implements_readfile:
+                m.readfile(self._filename)
+            else:
+                with open(self._filename, 'rb') as f:
+                    for chunk in iter(partial(f.read, self.CHUNK_SIZE), b''):
+                        m.update(chunk)
+
+            hexdigest = m.hexdigest()
+
+        return hexdigest
+
+    def _runmod_feature(self, modfeature):
+        return modfeature(buffer=self._buffer, filename=self._filename).result
+
+    def _generate_hashes(self):
         algos = list(hashlib.algorithms_available)
         for a in algorithm.__subclasses__():
             algos.append(a.__name__)
@@ -115,14 +141,16 @@ class hashdd(object):
                 continue
 
             if module.startswith('hashdd_'):
-                m = getattr(hashlib, module)
-                if m.prefilter(self._buffer):
-                    setattr(self, module[7:], m(self._buffer).hexdigest())
+                hexdigest = None
+                try:
+                    hexdigest = self._runmod_algo(module)
+                except (Exception) as e:
+                    self._logger.warning(f'Exception raised when calculating {module}, setting to None: {e}')
+                    pass 
+                    
+                setattr(self, module[7:], hexdigest)
 
     def _generate_profile(self):
-        if self._buffer is None:
-            raise Exception('No buffer provided, nothing to do')
-
         for f in feature.__subclasses__():
             if ( f.__name__ == 'hashdd_plaintext'
                     and not self._store_plaintext ):
@@ -137,7 +165,14 @@ class hashdd(object):
                 setattr(self, f.__name__[7:], self._feature_overrides[f.__name__])
                 continue
 
-            setattr(self, f.__name__[7:], f(buffer=self._buffer, filename=self._filename).result )
+            result = None
+            try:
+                result = self._runmod_feature(f)
+            except (Exception) as e:
+                self._logger.warning(f'Exception raised when calculating {f.__name__}, setting to None: {e}')
+                pass 
+
+            setattr(self, f.__name__[7:], result) 
 
 
     def todict(self):

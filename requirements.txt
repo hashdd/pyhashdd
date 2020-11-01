@@ -24,7 +24,6 @@ requests==2.24.0
 requests-toolbelt==0.9.1
 rfc3986==1.4.0
 scipy==1.5.2
-sdhash==0.0.4
 SecretStorage==3.1.2
 six==1.15.0
 ssdeep==3.4

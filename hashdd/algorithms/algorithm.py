@@ -24,6 +24,7 @@ class algorithm(object):
     name = None
     validation_regex = None
     sample = None # The result of hashing sample.exe
+    implements_readfile = False
 
     def __init__(self, arg):
         self.setup(arg)
@@ -59,6 +60,8 @@ class algorithm(object):
         copy = super(self.__class__, self).__new__(self.__class__)
         return copy
 
+    def readfile(self, filename):
+        raise NotImplemented
 
     @classmethod
     def validate(self, string):
