@@ -31,7 +31,7 @@ from hashdd.features.feature import feature
 from hashdd.constants import MAX_SIZE
 
 class hashdd(object):
-    CHUNK_SIZE=1024
+    CHUNK_SIZE=8192
     def __init__(self,  filename=None, buf=None, store_plaintext=False,
             features=None, feature_overrides=None, algorithms=None):
         """Primary class for all hashing and profiling modules.
