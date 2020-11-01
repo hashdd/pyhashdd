@@ -62,7 +62,7 @@ class TestHashdd(unittest.TestCase):
         with open(self.TEST_FILENAME, 'rb') as f:
             buf = f.read()
 
-        h = hashdd(filename=self.TEST_FILENAME, buf=buf)
+        h = hashdd(buf=buf)
         self.assertIsNotNone(h)
 
         d = h.todict()

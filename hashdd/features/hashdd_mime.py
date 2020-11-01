@@ -24,5 +24,10 @@ from .feature import feature
 class hashdd_mime(feature):
     def process(self):
         m = fmagic.Magic(mime=True)
-        return m.from_buffer(self.buffer)
+        if self.buffer:
+            return m.from_buffer(self.buffer)
+        elif self.filename:
+            return m.from_file(self.filename)
+        return None
+
 

@@ -23,5 +23,9 @@ from .feature import feature
 
 class hashdd_filemagic(feature):
     def process(self):
-        return magic.from_buffer(self.buffer)
+        if self.buffer:
+            return magic.from_buffer(self.buffer)
+        elif self.filename:
+            return magic.from_file(self.filename)
+        return None
 
