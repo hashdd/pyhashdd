@@ -4,11 +4,27 @@ pyhashdd is a library for building and using hash databases.
 
 # Installation
 
-With all prerequisites installed, you can install pyhashdd with `pip`:
+With all prerequisites installed, you can install pyhashdd with `pip`, the `[all]` extras directive will install everything to need for extended hashes like `ssdeep` and `pysha3`:
+
+```
+pip install hashdd[all]
+```
+
+## Alternative Installations
+
+### Default Installation
+By default, we don't want to assume you have all of the required prerequisites installed, so we just install the absolute bare minimum for you to use the library as an import. 
 
 ```
 pip install hashdd
+```
 
+### Extended Hashes Installation 
+
+Many of our "extended" hashes are essentially wrappers around popular OS libraries. These libraries are OS-level dependencies that we dont want to force you to use. So but default we don't install them but give you the option to install them all if you'd like. 
+
+```
+pip install hashdd[all]
 ```
 
 # Docker
@@ -43,7 +59,7 @@ brew install ssdeep
 
 ```
 
-# Command Line Examples
+# `hashddcli` Examples
 
 To recusively (`-d goodfiles/`) calculate the SHA256 hashes of files in the `goodfiles/` directory and add those hashes to a new bloom filter (the bloom filter is stored in `hashdd.bloom`): 
 

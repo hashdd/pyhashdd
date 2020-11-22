@@ -28,7 +28,8 @@ RUN git clone https://github.com/hashdd/sdhash.git
 RUN cd sdhash && make swig-py 
 RUN cp sdhash/swig/python/sdbf_class.py sdhash/swig/python/_sdbf_class.so libs/linux/x86_64/algorithms/
 
-RUN python setup.py install
+RUN pip install --upgrade pip
+RUN pip install .[all]
 
 CMD [ "hashdd" ]
 

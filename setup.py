@@ -74,8 +74,6 @@ def copy_libs():
 
 def main():
     base_dir = dirname(__file__)
-    install_requires = open('requirements.txt').read().splitlines()
-
     with open('hashdd/version', 'r', encoding='utf-8') as config_py:
         version = re.search(r'^\s+__version__\s*=\s*[\'"]([^\'"]*)[\'"]', config_py.read(), re.MULTILINE).group(1)
 
@@ -92,9 +90,20 @@ def main():
         url='https://www.hashdd.com',
         packages=find_packages(exclude=['bin', 'docs', 'libs']),
         package_data={ 'hashdd': copy_libs() },
-        #zip_safe=False,
         scripts=['bin/hashdd'],
-        install_requires=install_requires,
+        install_requires=[
+            # This should be the most stable and safe libraries that will likely not need OS level dependencies
+            "python-magic==0.4.18",
+            "termcolor==1.1.0",
+            "pybloomfiltermmap3==0.5.3"
+            ],
+        extras_require={
+            'all': [
+                "ssdeep==3.4",
+                "pysha3==1.0.2",
+                "cffi==1.14.3"
+                ]
+            },
         classifiers=CLASSIFIERS,
         keywords=['hashdd', 'pyhashdd', 'hash database'],
         license="Apache License 2.0",
