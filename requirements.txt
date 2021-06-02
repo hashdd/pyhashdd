@@ -30,6 +30,6 @@ ssdeep==3.4
 termcolor==1.1.0
 tqdm==4.50.2
 twine==3.2.0
-urllib3==1.25.10
+urllib3==1.26.5
 webencodings==0.5.1
 zipp==3.3.0
