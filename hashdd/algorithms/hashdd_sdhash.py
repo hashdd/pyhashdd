@@ -45,7 +45,10 @@ class hashdd_sdhash(algorithm):
         length = len(arg)
         return True if length >= 512 and length <= MAX_SIZE else False
     
-    def readfile(self, filename):
+    def readfile(self, filename, filesize):
+        if filesize is None or filesize <= 512 or filesize >= MAX_SIZE:
+            raise Exception(f'File is too large or small for our implementation of sdhash (size: {filesize})')
+
         self.filename = filename
         self.h = sdbf_class.sdbf(filename, 0)
 

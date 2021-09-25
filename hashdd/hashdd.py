@@ -111,7 +111,7 @@ class hashdd(object):
             m = module(b'')
 
             if m.implements_readfile:
-                m.readfile(self._filename)
+                m.readfile(self._filename, self._filename_size)
             else:
                 with open(self._filename, 'rb') as f:
                     for chunk in iter(partial(f.read, self.CHUNK_SIZE), b''):
