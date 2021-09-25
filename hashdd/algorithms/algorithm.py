@@ -60,7 +60,7 @@ class algorithm(object):
         copy = super(self.__class__, self).__new__(self.__class__)
         return copy
 
-    def readfile(self, filename):
+    def readfile(self, filename, filesize):
         raise NotImplemented
 
     @classmethod

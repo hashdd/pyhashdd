@@ -8,6 +8,7 @@ from hashdd.features import feature
 class TestHashdd(unittest.TestCase):
     TEST_FILENAME="tests/data/sample.exe"
     TEST_FILENAME_ZERO="tests/data/file_size_zero.txt"
+    TEST_FILENAME_SMALL="tests/data/small_file.txt"
 
     
     def check_hashdd(self, todict, safedict):
@@ -55,6 +56,16 @@ class TestHashdd(unittest.TestCase):
         sd = h.safedict()
         self.assertIsInstance(sd, dict)
         
+        # Check small sized file (since this makes sdhash puke)
+        h = hashdd(filename=self.TEST_FILENAME_SMALL)
+        self.assertIsNotNone(h)
+
+        d = h.todict()
+        self.assertIsInstance(d, dict)
+
+        sd = h.safedict()
+        self.assertIsInstance(sd, dict)
+
         # Dont check algorithms, just check features
         # self.check_hashdd(d, sd)
 
