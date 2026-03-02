@@ -20,8 +20,7 @@ limitations under the License.
 from .algorithm import algorithm
 
 import hashlib
-import six
-import re 
+import re
 
 
 # https://github.com/dropbox/dropbox-api-content-hasher/blob/master/python/dropbox_content_hasher.py
@@ -60,7 +59,7 @@ class DropboxContentHasher(object):
             raise AssertionError(
                 "can't use this object anymore; you already called digest()")
 
-        assert isinstance(new_data, six.binary_type), (
+        assert isinstance(new_data, bytes), (
             "Expecting a byte string, got {!r}".format(new_data))
 
         new_data_pos = 0

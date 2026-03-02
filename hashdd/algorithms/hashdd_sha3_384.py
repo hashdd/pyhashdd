@@ -19,7 +19,6 @@ limitations under the License.
 """
 import re
 import hashlib
-import sha3
 
 from .algorithm import algorithm
 

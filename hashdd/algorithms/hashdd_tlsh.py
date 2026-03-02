@@ -29,7 +29,7 @@ limitations under the License.
 import re
 import hashlib
 
-from hashdd.algorithms import tlsh
+import tlsh
 from hashdd.algorithms.algorithm import algorithm
 
 class hashdd_tlsh(algorithm):
@@ -47,7 +47,11 @@ class hashdd_tlsh(algorithm):
     def hexdigest(self):
         self.h.final()
         try:
-            return self.h.hexdigest()
+            result = self.h.hexdigest()
+            # Newer versions of python-tlsh prefix the hash with "T1"
+            if result.startswith('T1'):
+                result = result[2:]
+            return result
         except (ValueError) as e:
             """If there isnt enough variation in the input the tlsh module 
             will return a ValueError. There doesn't seem to be a good place to

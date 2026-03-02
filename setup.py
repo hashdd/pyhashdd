@@ -93,21 +93,21 @@ def main():
         scripts=['bin/hashdd'],
         install_requires=[
             # This should be the most stable and safe libraries that will likely not need OS level dependencies
-            "python-magic==0.4.18",
-            "termcolor==1.1.0",
-            "pybloomfiltermmap3==0.5.3"
+            "python-magic>=0.4.27",
+            "termcolor>=1.1.0",
+            "pybloomfiltermmap3>=0.6.0"
             ],
         extras_require={
             'all': [
-                "ssdeep==3.4",
-                "pysha3==1.0.2",
-                "cffi==1.14.3"
+                "ssdeep>=3.4",
+                "cffi>=1.14.3",
+                "python-tlsh>=4.5.0"
                 ]
             },
         classifiers=CLASSIFIERS,
         keywords=['hashdd', 'pyhashdd', 'hash database'],
         license="Apache License 2.0",
-        python_requires='>=3.7'
+        python_requires='>=3.8'
     )
 
 
