@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.12
 
 WORKDIR /usr/src/app
 
@@ -15,20 +15,16 @@ RUN apt-get -qq -y update && apt-get -qq -y --no-install-recommends install \
         swig \
         libboost-thread-dev \
         software-properties-common && \
-    mv /usr/bin/lsb_release /usr/bin/lsb_release.bak && \
     apt-get -y autoclean && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/*
 
-# Link Python includes somewhere that the sdhash Makefile can find
-RUN ln -s /usr/local/include/python3.7m /usr/include/python3.7
-
 # Clone and build!
 RUN git clone https://github.com/hashdd/sdhash.git
-RUN cd sdhash && make swig-py 
+RUN cd sdhash && make swig-py
 RUN cp sdhash/swig/python/sdbf_class.py sdhash/swig/python/_sdbf_class.so libs/linux/x86_64/algorithms/
 
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip setuptools
 RUN pip install .[all]
 
 CMD [ "hashdd" ]
