@@ -95,7 +95,8 @@ def main():
             # This should be the most stable and safe libraries that will likely not need OS level dependencies
             "python-magic>=0.4.27",
             "termcolor>=1.1.0",
-            "pybloomfiltermmap3>=0.6.0"
+            "pybloomfiltermmap3>=0.6.0",
+            "requests>=2.32.0",
             ],
         extras_require={
             'all': [
